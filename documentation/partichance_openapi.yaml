@@ -1,0 +1,254 @@
+
+openapi: 3.0.3
+info:
+  title: PartiChance API
+  version: 1.0.0
+  description: |
+    API RESTful pour la plateforme PartiChance, permettant à des particuliers de vendre leurs biens via des campagnes de vente par tickets.
+
+servers:
+  - url: https://api.partichance.com/v1
+    description: Serveur principal
+
+paths:
+  /auth/signup:
+    post:
+      summary: Créer un compte utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Compte créé
+        '400':
+          description: Données invalides
+
+  /auth/login:
+    post:
+      summary: Connexion utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Identifiants invalides
+
+  /campaigns:
+    get:
+      summary: Liste des campagnes actives
+      responses:
+        '200':
+          description: Liste récupérée
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    seller_id:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    image_urls:
+                      type: array
+                      items:
+                        type: string
+                    ticket_price:
+                      type: number
+                    min_tickets:
+                      type: number
+                    allow_overflow:
+                      type: boolean
+                    end_date:
+                      type: string
+                      format: date-time
+                    is_closed:
+                      type: boolean
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+
+    post:
+      summary: Créer une nouvelle campagne
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                image_urls:
+                  type: array
+                  items:
+                    type: string
+                ticket_price:
+                  type: number
+                min_tickets:
+                  type: integer
+                allow_overflow:
+                  type: boolean
+                end_date:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Campagne créée
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  image_urls:
+                    type: array
+                    items:
+                      type: string
+                  ticket_price:
+                    type: number
+                  min_tickets:
+                    type: integer
+                  allow_overflow:
+                    type: boolean
+                  end_date:
+                    type: string
+                    format: date-time
+
+  /campaigns/{id}:
+    get:
+      summary: Détail d'une campagne
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Détail de la campagne
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    image_urls:
+                      type: array
+                      items:
+                        type: string
+                    ticket_price:
+                      type: number
+                    min_tickets:
+                      type: integer
+                    allow_overflow:
+                      type: boolean
+                    end_date:
+                      type: string
+                      format: date-time
+                    is_closed:
+                      type: boolean
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+
+  /campaigns/{id}/tickets:
+    post:
+      summary: Acheter des tickets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+      responses:
+        '200':
+          description: Paiement Stripe initié
+
+  /webhooks/stripe:
+    post:
+      summary: Webhook Stripe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Événement Stripe reçu
+
+  /campaigns/{id}/draw:
+    post:
+      summary: Tirer au sort un gagnant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Gagnant tiré
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
