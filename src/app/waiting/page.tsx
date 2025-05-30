@@ -139,7 +139,7 @@ const PreLaunchHero = () => {
 
                                     <h3 className="text-2xl font-bold mb-4">Bientôt disponible</h3>
                                     <p className="text-gray-600 mb-6">
-                                        Découvrez une nouvelle façon de vendre et d'acheter qui révolutionne le commerce en ligne.
+                                        Découvrez une nouvelle façon de vendre et d&apos;acheter qui révolutionne le commerce en ligne.
                                     </p>
 
                                     <div className="space-y-4">
