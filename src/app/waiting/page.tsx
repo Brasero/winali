@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowRight, Mail, Users, Gift, Clock } from 'lucide-react';
+import {useIsMobile} from "@/hook/useIsMobile";
 
 const PreLaunchHero = () => {
+    const isMobile = useIsMobile();
     const [email, setEmail] = useState('');
     const [countdown, setCountdown] = useState({
         days: 15,
@@ -62,19 +64,19 @@ const PreLaunchHero = () => {
                         <div className="grid grid-cols-4 gap-4 mb-8 max-w-md mx-auto lg:mx-0">
                             <div className="bg-white rounded-lg p-4 shadow-md text-center">
                                 <div className="text-2xl font-bold text-brand-purple">{countdown.days}</div>
-                                <div className="text-xs text-gray-500 uppercase">Jours</div>
+                                <div className="text-xs text-gray-500 uppercase">{isMobile ? "J" : "Jours"}</div>
                             </div>
                             <div className="bg-white rounded-lg p-4 shadow-md text-center">
                                 <div className="text-2xl font-bold text-brand-purple">{countdown.hours}</div>
-                                <div className="text-xs text-gray-500 uppercase">Heures</div>
+                                <div className="text-xs text-gray-500 uppercase">{isMobile ? "H" : "Heures"}</div>
                             </div>
                             <div className="bg-white rounded-lg p-4 shadow-md text-center">
                                 <div className="text-2xl font-bold text-brand-purple">{countdown.minutes}</div>
-                                <div className="text-xs text-gray-500 uppercase">Minutes</div>
+                                <div className="text-xs text-gray-500 uppercase">{isMobile ? "M":"Minutes"}</div>
                             </div>
                             <div className="bg-white rounded-lg p-4 shadow-md text-center">
                                 <div className="text-2xl font-bold text-brand-purple">{countdown.seconds}</div>
-                                <div className="text-xs text-gray-500 uppercase">Secondes</div>
+                                <div className="text-xs text-gray-500 uppercase">{isMobile ? "S":"Secondes"}</div>
                             </div>
                         </div>
 
