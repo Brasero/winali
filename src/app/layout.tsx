@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import {Inter} from "next/font/google";
 import "./globals.css";
 
-
+const inter = Inter({subsets: ["latin"]})
 
 
 
@@ -25,12 +26,9 @@ export default function RootLayout({
         <meta name="author" content="PartiChance"/>
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin={"true"}/>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-            rel="stylesheet"/>
     </head>
     <body
-        className={`font-inter antialiased`}
+        className={`${inter.className} antialiased`}
     >
     {children}
     </body>
