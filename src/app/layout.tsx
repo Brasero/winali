@@ -25,7 +25,7 @@ export default function RootLayout({
               content="Créez une campagne, vendez par tickets, tirez au sort un gagnant sur PartiChance"/>
         <meta name="author" content="PartiChance"/>
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin={"true"}/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin={true}/>
     </head>
     <body
         className={`${inter.className} antialiased`}
