@@ -14,7 +14,7 @@ export const db = new Client({
 export async function query(
     text: string,
     params?: unknown[]
-): Promise<{ rows }> {
+): Promise<{ rows: string }> {
     const result = db.query(text, params);
     return { rows: result };
 }
