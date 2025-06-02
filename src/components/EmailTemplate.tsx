@@ -1,8 +1,9 @@
+import {ReactNode} from "react";
 
 interface EmailTemplateProps {
 	verifyUrl: string;
 }
-export const ValidateEmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({verifyUrl}) => {
+export const ValidateEmailTemplate: ReactNode = ({verifyUrl}) => {
 	return (<div style={{
 		fontFamily: "sans-serif",
 		lineHeight: 1.5,
