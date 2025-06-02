@@ -2,6 +2,8 @@ import {query} from "@/lib/db";
 import { z } from "zod";
 import crypto from "node:crypto";
 import {NextRequest, NextResponse} from "next/server";
+import {sendVerificationMail} from "@/lib/mail";
+import {ValidateEmailTemplate} from "@/components/EmailTemplate";
 
 const createTable = async () => {
     return await query(`
@@ -38,15 +40,22 @@ export async function POST(request: NextRequest) {
         const res = await query(`
             SELECT email FROM subscribers WHERE email = $1;
         `, [email])
-        console.log(res)
         if (res.length > 0) {
             return NextResponse.json({ message: "Déjà abonné"});
+        }
+
+        if (!process.env.NEXT_PUBLIC_APP_URL) {
+            throw new Error("Aucun lien pour l'envoi d'e-mail, completer la variable NEXT_PUBLIC_APP_URL")
         }
 
         await query(
             `INSERT INTO subscribers (email, verification_token) VALUES ($1, $2)`,
             [email, token]
         );
+
+        const verificationLink = `${process.env.NEXT_PUBLIC_APP_URL}/api/verify?token=${token}`
+
+        await sendVerificationMail(email, ValidateEmailTemplate({verifyUrl: verificationLink}))
 
         return NextResponse.json({message: "E-mail enregistré"})
     } catch(err) {
