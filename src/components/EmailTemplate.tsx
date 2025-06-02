@@ -10,9 +10,9 @@ export const ValidateEmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({v
 	}}>
 		<h1>Bienvenue sur PartyChance ! </h1>
 		<p>
-			Nous vous remercions de vous intéresser à nous, pour confirmer votre adresse e-mail, cliquez sur ce lien :
+			Nous vous remercions de vous intéresser à nous, pour confirmer votre adresse e-mail, cliquez sur ce lien :<br/>
 			<a href={verifyUrl} style={{display: "block"}}>Confirmer mon inscription</a>
 		</p>
-		<p>Si vous n'avez pas demandé cette e-mail, ignorez-le simplement.</p>
+		<p>Si vous n&apos;avez pas demandé cette e-mail, ignorez-le simplement.</p>
 	</div>)
 }
