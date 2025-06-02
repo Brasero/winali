@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowRight, Mail, Users, Gift, Clock } from 'lucide-react';
 import {useIsMobile} from "@/hook/useIsMobile";
-import {setLazyProp} from "next/dist/server/api-utils";
 
 const PreLaunchHero = () => {
     const isMobile = useIsMobile();

@@ -11,9 +11,9 @@ export const db = new Client({
     ssl: {rejectUnauthorized: false}
 })
 
-export async function query<T = any>(
+export async function query<T = unknown>(
     text: string,
-    params?: any[]
+    params?: unknown[]
 ): Promise<{ rows: T[] }> {
     const result = db.query<T>(text, params);
     return { rows: result };
