@@ -3,7 +3,7 @@ import {ReactNode} from "react";
 interface EmailTemplateProps {
 	verifyUrl: string;
 }
-export const ValidateEmailTemplate: ReactNode = ({verifyUrl}) => {
+export const ValidateEmailTemplate: ReactNode = ({verifyUrl}: EmailTemplateProps) => {
 	return (<div style={{
 		fontFamily: "sans-serif",
 		lineHeight: 1.5,
