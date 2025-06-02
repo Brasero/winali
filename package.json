@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "echo \"Aucun test\" && exit 0",
-    "push": "git add . && git commit -m \"update\" && git push"
+    "push": "npm run lint && git add . && git commit -m \"update\" && git push"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.0",
