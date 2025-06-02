@@ -11,10 +11,10 @@ export const db = new Client({
     ssl: {rejectUnauthorized: false}
 })
 
-export async function query<QueryResult>(
+export async function query(
     text: string,
     params?: unknown[]
-): Promise<{ rows: QueryResult[] }> {
-    const result = db.query<QueryResultRow>(text, params);
+): Promise<{ rows }> {
+    const result = db.query(text, params);
     return { rows: result };
 }
