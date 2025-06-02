@@ -1,4 +1,4 @@
-import {Client} from "@neondatabase/serverless"
+import {Client, QueryResultRow} from "@neondatabase/serverless"
 
 if (!process.env.DATABASE_DATABASE_URL) {
     throw new Error("DATABASE_DATABASE_URL n'est pas défini");
@@ -15,6 +15,6 @@ export async function query<T = unknown>(
     text: string,
     params?: unknown[]
 ): Promise<{ rows: T[] }> {
-    const result = db.query<T>(text, params);
+    const result = db.query<QueryResultRow>(text, params);
     return { rows: result };
 }
