@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     const token = crypto.randomUUID();
 
     try {
-        const {rows: existingRows} = await query<{email: string}>(`
+        const {rows: existingRows} = await query(`
             SELECT email FROM subscribers WHERE email = $1
         `, [email])
         if (existingRows.length > 0) {
