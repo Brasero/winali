@@ -1,6 +1,6 @@
 import {query} from "@/lib/db";
 import { z } from "zod";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import {NextRequest, NextResponse} from "next/server";
 
 const createTable = async () => {
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         const {rows: existingRows} = await query(`
             SELECT email FROM subscribers WHERE email = $1
         `, [email])
-        if (existingRows.length > 0) {
+        if (existingRows) {
             return NextResponse.json({ message: "Déjà abonné"});
         }
 
