@@ -35,10 +35,11 @@ export async function POST(request: NextRequest) {
     const token = crypto.randomUUID();
 
     try {
-        const {rows: existingRows} = await query(`
+        const res = await query(`
             SELECT email FROM subscribers WHERE email = $1;
         `, [email])
-        if (existingRows) {
+        console.log(res)
+        if (res.length > 0) {
             return NextResponse.json({ message: "Déjà abonné"});
         }
 
