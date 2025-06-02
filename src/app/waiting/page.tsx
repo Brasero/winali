@@ -4,10 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowRight, Mail, Users, Gift, Clock } from 'lucide-react';
 import {useIsMobile} from "@/hook/useIsMobile";
+import {setLazyProp} from "next/dist/server/api-utils";
 
 const PreLaunchHero = () => {
     const isMobile = useIsMobile();
     const [email, setEmail] = useState('');
+    const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+    const [message, setMessage] = useState<string>("")
     const [countdown, setCountdown] = useState({
         days: 15,
         hours: 12,
@@ -34,11 +37,31 @@ const PreLaunchHero = () => {
         return () => clearInterval(timer);
     }, []);
 
-    const handleEmailSubmit = (e: React.FormEvent) => {
+    const handleEmailSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Email inscrit:', email);
-        setEmail('');
-        // Ici on pourrait ajouter la logique d'inscription
+        if (!email) return;
+        setStatus("loading");
+
+        try {
+            const res = await fetch("/api/subscribe", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({email}),
+            });
+            const data = await res.json()
+            if (!res.ok) {
+                setStatus("error");
+                setMessage(data.error || "Erreur inconnue");
+            } else {
+                setMessage(data.message);
+                setStatus("success");
+            }
+        } catch {
+            setStatus("error");
+            setMessage("Echec de la requête");
+        } finally {
+            setEmail("");
+        }
     };
 
     return (
@@ -81,22 +104,31 @@ const PreLaunchHero = () => {
                         </div>
 
                         {/* Email Signup */}
-                        <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-3 mb-6 max-w-md mx-auto lg:mx-0">
-                            <Input
-                                type="email"
-                                placeholder="Votre adresse email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="flex-1 h-12 bg-background"
-                                required
-                            />
-                            <Button
-                                type="submit"
-                                className="bg-brand-purple hover:bg-brand-purple/90 text-white font-semibold px-6 h-12"
-                            >
-                                <Mail className="w-4 h-4 mr-2" />
-                                Être notifié
-                            </Button>
+                        <form onSubmit={handleEmailSubmit} className="flex flex-col gap-1 mb-6 max-w-md mx-auto lg:mx-0">
+                            <div className={"flex flex-col sm:flex-row gap-3 mb-1 max-w-md mx-auto lg:mx-0"}>
+                                <Input
+                                    type="email"
+                                    placeholder="Votre adresse email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="flex-1 h-12 bg-background"
+                                    required
+                                />
+                                <Button
+                                    type="submit"
+                                    className="bg-brand-purple hover:bg-brand-purple/90 text-white font-semibold px-6 h-12"
+                                    disabled={status === "loading"}
+                                >
+                                    <Mail className="w-4 h-4 mr-2" />
+                                    {status === "loading" ? "Envoi..." : "Être notifié"}
+                                </Button>
+                            </div>
+                            {
+                                status === "success" && <p className={"text-green-600"}>{message}</p>
+                            }
+                            {
+                                status === "error" && <p className="text-red-600">{message}</p>
+                            }
                         </form>
 
                         <p className="text-sm text-gray-500 mb-8">

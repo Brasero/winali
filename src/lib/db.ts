@@ -1,0 +1,20 @@
+import {Client} from "@neondatabase/serverless"
+
+if (!process.env.DATABASE_DATABASE_URL) {
+    throw new Error("DATABASE_DATABASE_URL n'est pas défini");
+} else {
+    console.log(process.env.DATABASE_DATABASE_URL);
+}
+
+export const db = new Client({
+    connectionString: process.env.DATABASE_DATABASE_URL,
+    ssl: {rejectUnauthorized: false}
+})
+
+export async function query<T = any>(
+    text: string,
+    params?: any[]
+): Promise<{ rows: T[] }> {
+    const result = db.query<T>(text, params);
+    return { rows: result };
+}
