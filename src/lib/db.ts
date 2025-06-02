@@ -1,4 +1,4 @@
-import {Client, QueryResultRow} from "@neondatabase/serverless"
+import {Client} from "@neondatabase/serverless"
 
 if (!process.env.DATABASE_DATABASE_URL) {
     throw new Error("DATABASE_DATABASE_URL n'est pas défini");
