@@ -10,6 +10,7 @@ jobs:
   build:
     name: Build & lint for preview
     runs-on: ubuntu-latest
+    environment: vercel_deploy
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL}}
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
@@ -38,6 +39,7 @@ jobs:
     name: Deploy project to Vercel for preview
     runs-on: ubuntu-latest
     needs: ["build"]
+    environment: vercel_deploy
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL}}
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
