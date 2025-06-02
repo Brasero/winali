@@ -1,6 +1,6 @@
 
 interface EmailTemplateProps {
-	verifyUrl
+	verifyUrl: string;
 }
 export const ValidateEmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({verifyUrl}) => {
 	return (<div style={{
