@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     try {
         const {rows: existingRows} = await query(`
-            SELECT email FROM subscribers WHERE email = $1
+            SELECT email FROM subscribers WHERE email = $1;
         `, [email])
         if (existingRows) {
             return NextResponse.json({ message: "Déjà abonné"});
