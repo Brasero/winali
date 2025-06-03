@@ -137,7 +137,7 @@ const Profile = () => {
 
                         <div className="flex items-center gap-2 text-sm text-gray-500">
                             <span>{
-                                userProfile.termsAccepted ? `✅ Conditions d&apos;utilisation acceptées le ${new Date(userProfile.termsAcceptedDate).toLocaleDateString('fr-FR')}` :
+                                userProfile.termsAccepted ? `✅ Conditions d'utilisation acceptées le ${new Date(userProfile.termsAcceptedDate).toLocaleDateString('fr-FR')}` :
                                     "❌ Conditions d&apos;utilisation non acceptées"
                             }</span>
                         </div>
