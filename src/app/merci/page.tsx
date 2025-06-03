@@ -8,7 +8,7 @@ const Thank = () => {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col items-center">
                     <h1 className="text-4xl leading-20 sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-brand-purple to-brand-coral">PartyChance</h1>
-                    <Card className={"w-1/2"}>
+                    <Card className={"lg:w-1/2 sm:w-3/4"}>
                         <CardHeader className={"flex flex-row items-center justify-center w-full"}>
                             <h2 className={"text-2xl mb-4 text-green-600"}>E-mail validé</h2>
                         </CardHeader>
