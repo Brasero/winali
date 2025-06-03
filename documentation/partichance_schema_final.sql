@@ -2,7 +2,7 @@
 CREATE TYPE transaction_type AS ENUM ('payment', 'refund', 'payout');
 
 -- Table USERS
-CREATE TABLE users
+CREATE TABLE IF NOT EXISTS users
 (
     id                UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
     email             VARCHAR(255)             NOT NULL UNIQUE,
@@ -13,7 +13,7 @@ CREATE TABLE users
 );
 
 -- Table CAMPAIGNS
-CREATE TABLE campaigns
+CREATE TABLE IF NOT EXISTS campaigns
 (
     id             UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
     seller_id      UUID                     NOT NULL REFERENCES users (id) ON DELETE CASCADE,
@@ -30,7 +30,7 @@ CREATE TABLE campaigns
 );
 
 -- Table TICKETS (1 ligne = 1 ticket)
-CREATE TABLE tickets
+CREATE TABLE IF NOT EXISTS tickets
 (
     id           UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
     campaign_id  UUID                     NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE,
@@ -40,7 +40,7 @@ CREATE TABLE tickets
 );
 
 -- Table DRAWS
-CREATE TABLE draws
+CREATE TABLE IF NOT EXISTS draws
 (
     id                UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
     campaign_id       UUID                     NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE,
@@ -50,7 +50,7 @@ CREATE TABLE draws
 );
 
 -- Table STRIPE_TRANSACTIONS
-CREATE TABLE stripe_transactions
+CREATE TABLE IF NOT EXISTS stripe_transactions
 (
     id                UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
     campaign_id       UUID                     NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE,
@@ -64,7 +64,7 @@ CREATE TABLE stripe_transactions
 );
 
 -- Table relationnelle TICKETS_PAYMENTS
-CREATE TABLE ticket_payments
+CREATE TABLE IF NOT EXISTS ticket_payments
 (
     ticket_id             UUID NOT NULL REFERENCES tickets (id) ON DELETE CASCADE,
     stripe_transaction_id UUID NOT NULL REFERENCES stripe_transactions (id) ON DELETE CASCADE,
