@@ -43,7 +43,7 @@ export default function SignIn(){
     setIsLoading(true);
     const result = signInSchema.safeParse(user);
     if (!result.success) {
-      setErrors(result.error.format());
+      setErrors({...result.error.format()});
       return;
     }
     const toastId = toast.loading("Inscription en cours ...")
