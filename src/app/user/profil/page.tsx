@@ -75,7 +75,7 @@ const Profile = async () => {
             SET is_seller = $1
             WHERE id = $2
             RETURNING *
-        `, [!isSeller, session?.user?.id as string]);
+        `, [String(!isSeller), session?.user?.id as string]);
         if (result.length === 0) {
             throw new Error("Erreur lors de la mise à jour du statut vendeur");
         }
