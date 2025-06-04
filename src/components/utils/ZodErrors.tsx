@@ -1,4 +1,4 @@
-export function ZodErrors({error}: {error: string[] | string}) {
+export function ZodErrors({error}: {error: string[] | string | undefined | null}) {
     if (!error || error.length === 0) return null;
     if (typeof error !== "string") return error.map((err: string, index: number) => {
         return (
