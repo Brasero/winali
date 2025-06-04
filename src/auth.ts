@@ -66,7 +66,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         generateSessionToken:() => randomUUID?.() ?? randomBytes(32).toString("hex"),
     },
     jwt: {
-        secret: process.env.NEXTAUTH_SECRET,
     },
     callbacks: {
          jwt({ token , user}) {
