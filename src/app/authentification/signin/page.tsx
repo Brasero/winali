@@ -9,6 +9,8 @@ import {signInSchema} from "@/lib/zod";
 import {ZodErrors} from "@/components/utils/ZodErrors";
 import {toast} from "sonner";
 
+type FieldName = "email" | "first_name" | "last_name" | "birth_date" | "password" | "password_confirm";
+
 const initialUserState = {
   email: "",
   first_name: "",
@@ -23,17 +25,19 @@ export default function SignIn(){
   const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
+    const { value} = e.target;
+    const name: FieldName = e.target.name as FieldName;
     setUser(prev => ({...prev, [name]: value}));
 
     // Validate the input on change
     const result = signInSchema.safeParse({...user, [name]: value});
     // If validation fails, set the error for the specific field
     if (!result.success) {
+      const formatted = result.error.format();
       setErrors({
         ...errors,
-        [name]: result.error.format()[name] as string || ""
-      } as object);
+        [name]: formatted[name] || ""
+      });
     } else {
       setErrors({});
     }
@@ -43,7 +47,7 @@ export default function SignIn(){
     setIsLoading(true);
     const result = signInSchema.safeParse(user);
     if (!result.success) {
-      setErrors(result.error.format() as object);
+      setErrors(result.error.format());
       return;
     }
     const toastId = toast.loading("Inscription en cours ...")
