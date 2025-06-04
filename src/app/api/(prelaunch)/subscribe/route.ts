@@ -1,6 +1,6 @@
 import {query} from "@/lib/db";
 import { z } from "zod";
-import crypto from "node:crypto";
+import crypto from "crypto";
 import {NextRequest, NextResponse} from "next/server";
 import {sendVerificationMail} from "@/lib/mail";
 import {ValidateEmailTemplatePreLunch} from "@/components/utils/EmailTemplate";

@@ -1,5 +1,5 @@
 import {NextRequest} from "next/server";
-import crypto from "node:crypto";
+import crypto from "crypto";
 import {query} from "@/lib/db";
 import {signInSchema} from "@/lib/zod";
 import {hashPassword} from "@/lib/password";
@@ -17,6 +17,7 @@ const createTable = async () => {
     first_name        VARCHAR(255)             NOT NULL,
     last_name         VARCHAR(255)             NOT NULL,
     birth_date        TIMESTAMP WITH TIME ZONE NOT NULL,
+    is_seller         BOOLEAN                  NOT NULL DEFAULT FALSE,
     validation_token  VARCHAR(255)             NULL,
     created_at        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
@@ -51,8 +52,8 @@ export async function POST(req: NextRequest) {
         }
 
         await query(`
-            INSERT INTO users (email, password_hash, first_name, last_name, birth_date, validation_token, is_email_verified)
-            VALUES ($1, $2, $3, $4, $5, $6, FALSE)
+            INSERT INTO users (email, password_hash, first_name, last_name, birth_date, validation_token, is_email_verified, is_seller)
+            VALUES ($1, $2, $3, $4, $5, $6, FALSE, FALSE)
         `, [email, hashedPassword, first_name, last_name, birth_date, validateToken]);
 
         await sendVerificationMail(email, ValidateEmailTemplate({verifyUrl: validateURL}))

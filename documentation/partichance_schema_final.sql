@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS users
     first_name        VARCHAR(255)             NOT NULL,
     last_name         VARCHAR(255)             NOT NULL,
     birth_date        TIMESTAMP WITH TIME ZONE NOT NULL,
+    is_seller         BOOLEAN                  NOT NULL DEFAULT FALSE,
     validation_token  VARCHAR(255)             NULL,
     created_at        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()

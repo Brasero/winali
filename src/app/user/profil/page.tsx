@@ -1,39 +1,86 @@
-"use client"
-import {useState} from "react";
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import {Button, buttonVariants} from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Mail, Calendar, Shield, LogOut, Settings, ShoppingCart, Store, ExternalLink } from 'lucide-react';
 import Link  from 'next/link';
 import SellerCampaigns from '@/components/profil/SellerCampaigns';
+import {auth, signOut} from "@/auth";
+import {query} from "@/lib/db";
+import {revalidatePath} from "next/cache";
+type UserProfile = {
+    email: string;
+    registrationDate: string;
+    emailVerified: boolean;
+    isSeller: boolean;
+    termsAccepted: boolean;
+    termsAcceptedDate: string;
+}
 
-const Profile = () => {
-    // Données d'exemple - à remplacer par des données réelles
-    const userProfile = {
-        email: 'user@example.com',
-        registrationDate: '2024-01-15',
-        emailVerified: true,
-        isSeller: true,
-        termsAccepted: true,
-        termsAcceptedDate: '2024-01-15'
+const Profile = async () => {
+    const session = await auth()
+    console.log(session)
+    if (!session || !session.user) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <h1 className="text-2xl font-bold mb-4">Accès non autorisé</h1>
+                    <p className="text-gray-600">Veuillez vous connecter pour accéder à votre profil.</p>
+                    <Link href={"/authentification/login"} className={buttonVariants({variant: "default"})}>Se connecter</Link>
+                </div>
+            </div>
+        );
+    }
+    //get user profile from database
+    const rows = await query(`
+        SELECT 
+            email,
+            created_at AS registrationDate,
+            is_email_verified AS emailVerified,
+            is_seller,
+            TRUE AS termsAccepted,
+            created_at AS termsAcceptedDate,
+            first_name,
+            last_name,
+            birth_date
+        FROM users
+        WHERE id = $1
+    `, [session?.user?.id as string]);
+    if (rows.length === 0) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <h1 className="text-2xl font-bold mb-4">Profil non trouvé</h1>
+                    <p className="text-gray-600">Aucun profil associé à cet utilisateur.</p>
+                    <Link href={"/authentification/signup"} className={buttonVariants({variant: "default"})}>S&apos;inscrire</Link>
+                </div>
+            </div>
+        );
+    }
+    const userProfile: UserProfile = {
+        email: rows[0].email,
+        registrationDate: rows[0].registrationdate as string,
+        emailVerified: rows[0].emailverified as boolean,
+        isSeller: rows[0].is_seller as boolean,
+        termsAccepted: rows[0].termsaccepted,
+        termsAcceptedDate: rows[0].termsaccepteddate
     };
-    const [isSellerEnabled, setIsSellerEnabled] = useState(userProfile.isSeller);
-
-
-
-    const handlePasswordChange = () => {
-        console.log('Modifier mot de passe');
-    };
-
-    const handleLogout = () => {
-        console.log('Déconnexion');
-    };
-
-    const handleSellerToggle = (enabled: boolean) => {
-        setIsSellerEnabled(enabled);
-        console.log('Statut vendeur:', enabled);
+    const handleSellerToggle = async (formData: FormData) => {
+        "use server";
+        const isSeller = formData.get("isSeller") === "on";
+        const result = await query(`
+            UPDATE users
+            SET is_seller = $1
+            WHERE id = $2
+            RETURNING *
+        `, [String(!isSeller), session?.user?.id as string]);
+        if (result.length === 0) {
+            throw new Error("Erreur lors de la mise à jour du statut vendeur");
+        }
+        console.log("Statut vendeur mis à jour :", result[0]);
+        revalidatePath("/user/profil");
     };
 
     return (
@@ -84,13 +131,18 @@ const Profile = () => {
                         <Separator />
 
                         <div className="flex flex-col sm:flex-row gap-4">
-                            <Button variant="outline" onClick={handlePasswordChange}>
+                            <Button variant="outline">
                                 Modifier mot de passe
                             </Button>
-                            <Button className={"text-white"} variant="destructive" onClick={handleLogout}>
-                                <LogOut className="w-4 h-4 mr-2" />
-                                Se déconnecter
-                            </Button>
+                            <form action={async () => {
+                                "use server"
+                                await signOut({redirectTo: "/authentification/login"});
+                            }}>
+                                <Button className={"text-white"} variant="destructive">
+                                    <LogOut className="w-4 h-4 mr-2" />
+                                    Se déconnecter
+                                </Button>
+                            </form>
                         </div>
                     </CardContent>
                 </Card>
@@ -129,23 +181,26 @@ const Profile = () => {
                                 <p className="font-medium">Je souhaite vendre des biens</p>
                                 <p className="text-sm text-gray-500">Active les droits &quot;vendeur&quot; dans votre compte</p>
                             </div>
-                            <Switch
-                                checked={isSellerEnabled}
-                                onCheckedChange={handleSellerToggle}
-                            />
+                            <form action={handleSellerToggle}>
+                                <Switch
+                                    checked={userProfile.isSeller}
+                                    name={"isSeller"}
+                                    type={"submit"}
+                                />
+                            </form>
                         </div>
 
                         <div className="flex items-center gap-2 text-sm text-gray-500">
                             <span>{
                                 userProfile.termsAccepted ? `✅ Conditions d'utilisation acceptées le ${new Date(userProfile.termsAcceptedDate).toLocaleDateString('fr-FR')}` :
-                                    "❌ Conditions d&apos;utilisation non acceptées"
+                                    "❌ Conditions d'utilisation non acceptées"
                             }</span>
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Section Vendeur */}
-                {isSellerEnabled && (
+                {userProfile.isSeller && (
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">

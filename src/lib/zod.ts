@@ -20,3 +20,12 @@ export const signInSchema = zod.object({
     message: "Les mots de passe ne correspondent pas",
     path: ["password_confirm"],
 })
+
+export const loginSchema = zod.object({
+    email: zod.string({required_error: "L'email est requis"})
+        .min(1, "L'email ne peut pas être vide")
+        .email("L'email doit être valide"),
+    password: zod.string({required_error: "Le mot de passe est requis"})
+        .min(8, "Le mot de passe doit contenir au moins 8 caractères")
+        .max(128, "Le mot de passe ne peut pas dépasser 128 caractères")
+})
