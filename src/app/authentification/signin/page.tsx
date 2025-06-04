@@ -10,6 +10,11 @@ import {ZodErrors} from "@/components/utils/ZodErrors";
 import {toast} from "sonner";
 
 type FieldName = "email" | "first_name" | "last_name" | "birth_date" | "password" | "password_confirm";
+type ErrorFields = {
+    [key in FieldName]?: {
+        _errors?: string[];
+    };
+}
 
 const initialUserState = {
   email: "",
@@ -21,7 +26,7 @@ const initialUserState = {
 }
 export default function SignIn(){
   const [user, setUser] = useState(initialUserState);
-  const [errors, setErrors] = useState( {});
+  const [errors, setErrors] = useState( {} as ErrorFields);
   const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
