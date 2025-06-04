@@ -14,7 +14,7 @@ export async function GET() {
         SELECT id, email, first_name, last_name, birth_date, created_at, updated_at, is_seller
         FROM users
         WHERE id = $1
-    `, [session.user.id]);
+    `, [session.user.id! as string]);
     if (rows.length === 0) {
         return new Response(JSON.stringify({ error: "User not found" }), {
             status: 404,
