@@ -32,7 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 SELECT id, email, password_hash, is_email_verified, first_name, last_name, birth_date
                 FROM users
                 WHERE email = $1
-                `, [credentials.email]);
+                `, [credentials.email as string]);
                 if (rows.length === 0) {
                     console.log("Aucun utilisateur trouvé avec cet e-mail");
                     throw new CustomError("Aucun utilisateur trouvé avec cet e-mail");
