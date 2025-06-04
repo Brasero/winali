@@ -47,7 +47,7 @@ const Profile = async () => {
             birth_date
         FROM users
         WHERE id = $1
-    `, [session.user.id])
+    `, [session?.user?.id as string]);
     if (rows.length === 0) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -75,7 +75,7 @@ const Profile = async () => {
             SET is_seller = $1
             WHERE id = $2
             RETURNING *
-        `, [!isSeller, session.user?.id]);
+        `, [!isSeller, session?.user?.id as string]);
         if (result.length === 0) {
             throw new Error("Erreur lors de la mise à jour du statut vendeur");
         }
