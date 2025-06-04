@@ -13,10 +13,10 @@ const Thank = () => {
                             <h2 className={"text-2xl mb-4 text-green-600"}>E-mail validé</h2>
                         </CardHeader>
                         <CardContent>
-                            <p className={"text-gray-600 px-5 text-center"}>Votre adresse mail à été validé, vous recevrez un e-mail lors du lancement de la plateforme.</p>
+                            <p className={"text-gray-600 px-5 text-center"}>Votre adresse mail à été validé, merci de votre confiance.</p>
                         </CardContent>
                         <CardFooter>
-                            <Link href={"/"} className={buttonVariants({variant: "link"})}>Retour</Link>
+                            <Link href={"/"} className={buttonVariants({variant: "link"})}>Retour à l&apos;accueil</Link>
                         </CardFooter>
                     </Card>
                 </div>

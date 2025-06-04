@@ -8,7 +8,10 @@ CREATE TABLE IF NOT EXISTS users
     email             VARCHAR(255)             NOT NULL UNIQUE,
     password_hash     VARCHAR(255)             NOT NULL,
     is_email_verified BOOLEAN                  NOT NULL DEFAULT FALSE,
-    name              VARCHAR(255)             NOT NULL,
+    first_name        VARCHAR(255)             NOT NULL,
+    last_name         VARCHAR(255)             NOT NULL,
+    birth_date        TIMESTAMP WITH TIME ZONE NOT NULL,
+    validation_token  VARCHAR(255)             NULL,
     created_at        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
