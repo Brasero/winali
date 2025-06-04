@@ -60,13 +60,13 @@ export default function SignIn(){
               type={'password'}
               id={'password_confirm'}
               placeholder={"Confirmer le mot de passe"}
-              className={"flex-1 h-12 bg-background"}
+              className={"flex-1 h-12 bg-background mb-5"}
               required
             />
             <Button type={"submit"} className={"w-full"}>Se connecter</Button>
           </CardContent>
-          <CardFooter>
-            <p>Déjà un compte ? <Link className={"text-primary text-underline"} href={"authentification/login"}> Se connecter</Link> </p>
+          <CardFooter className={"justify-center"}>
+            <p>Déjà un compte ? <Link className={"text-primary text-underline"} href={"/authentification/login"}> Se connecter</Link> </p>
           </CardFooter>
         </Card>
       </form>

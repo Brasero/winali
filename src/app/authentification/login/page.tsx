@@ -33,7 +33,7 @@ export default function LogIn(){
             />
             <Button type={"submit"} className={"w-full"}>Se connecter</Button>
           </CardContent>
-          <CardFooter>
+          <CardFooter className={"justify-center"}>
             <p>Pas encore de compte ? <Link className={"text-primary text-underline"} href={"/authentification/signin"}> Créer un compte</Link> </p>
           </CardFooter>
         </Card>
