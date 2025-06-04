@@ -43,7 +43,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     console.log("Compte non vérifié");
                     throw new CustomError("Compte non validé, veuillez vérifier votre e-mail.");
                 }
-                const isPasswordValid = await isSamePassword(credentials.password, user.password_hash);
+                const isPasswordValid = await isSamePassword(credentials.password as string, user.password_hash as string);
                 if (!isPasswordValid) {
                     console.log("Mot de passe invalide");
                     throw new CustomError("Mot de passe invalide");
