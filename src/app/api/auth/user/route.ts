@@ -4,7 +4,7 @@ import {query} from "@/lib/db";
 export async function GET() {
     const session = await auth();
     console.log("session:", session);
-    if (!session || !session.user) {
+    if (!session || !session.user?.id) {
         return new Response(JSON.stringify({ error: "Unauthorized" }), {
             status: 401,
             headers: { "Content-Type": "application/json" },
