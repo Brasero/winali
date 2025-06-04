@@ -79,9 +79,9 @@ export default function SignIn(){
         id: toastId
       });
       setUser(initialUserState); // Reset the form
-    } catch (error: Error) {
+    } catch (error) {
       console.error("Erreur lors de l'inscription :", error);
-      toast.error(error.message || "Erreur lors de l'inscription, veuillez réessayer plus tard.");
+      toast.error(error.error ? error.error : "Erreur lors de l'inscription, veuillez réessayer plus tard.");
     }
     finally {
       setIsLoading(false)
