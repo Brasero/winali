@@ -1,7 +1,11 @@
-import { Button } from '@/components/ui/button';
-import Link from "next/link";
 
-const Navbar = () => {
+import {Button, buttonVariants} from '@/components/ui/button';
+import Link from "next/link";
+import {auth, signOut} from "@/auth";
+import {LogOut} from "lucide-react";
+
+const Navbar = async () => {
+    const session = await auth();
     return (
         <nav className="border-b py-4 bg-white fixed w-full z-10">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,12 +31,26 @@ const Navbar = () => {
                     </div>
 
                     <div className="flex items-center space-x-4">
-                        <Button variant="outline" className="hidden sm:flex">
-                            Se connecter
-                        </Button>
-                        <Button className="bg-brand-purple hover:bg-brand-purple/90">
-                            S&apos;inscrire
-                        </Button>
+                        {session?.user ? (
+                            <form action={async () => {
+                                "use server"
+                                await signOut()
+                            }}>
+                                <Button  className={`hidden sm:flex text-white`} variant="destructive">
+                                    <LogOut className="w-4 h-4 mr-2" />
+                                    Se déconnecter
+                                </Button>
+                            </form>
+                        ): (
+                            <>
+                                <Link href={"/authentification/login"} className={`${buttonVariants({variant: "outline"})} hidden sm:flex`}>
+                                    Se connecter
+                                </Link>
+                                <Link href={"/authentification/signup"} className={`${buttonVariants({variant: "default"})}`}>
+                                    S&apos;inscrire
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

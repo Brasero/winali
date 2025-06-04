@@ -24,7 +24,7 @@ const initialUserState = {
   password: "",
   password_confirm: ""
 }
-export default function SignIn(){
+export default function SignUp(){
   const [user, setUser] = useState(initialUserState);
   const [errors, setErrors] = useState( {} as ErrorFields);
   const [isLoading, setIsLoading] = useState(false)
@@ -59,7 +59,7 @@ export default function SignIn(){
     setErrors({});
     // If validation passes, you can proceed with form submission
     try {
-      const response = await fetch("/api/auth/signin", {
+      const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
