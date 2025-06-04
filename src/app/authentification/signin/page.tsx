@@ -81,7 +81,7 @@ export default function SignIn(){
       setUser(initialUserState); // Reset the form
     } catch (error) {
       console.error("Erreur lors de l'inscription :", error);
-      toast.error(error.error ? error.error : "Erreur lors de l'inscription, veuillez réessayer plus tard.");
+      toast.error("Erreur lors de l'inscription, veuillez réessayer plus tard.");
     }
     finally {
       setIsLoading(false)
