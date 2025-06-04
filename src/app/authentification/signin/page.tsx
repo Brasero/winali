@@ -8,7 +8,6 @@ import Link from "next/link";
 import {signInSchema} from "@/lib/zod";
 import {ZodErrors} from "@/components/utils/ZodErrors";
 import {toast} from "sonner";
-import {ZodFormattedError} from "zod";
 
 const initialUserState = {
   email: "",
@@ -33,7 +32,7 @@ export default function SignIn(){
     if (!result.success) {
       setErrors({
         ...errors,
-        [name]: result.error.format()[name] as Partial<ZodFormattedError<{initialState}>> || ""
+        [name]: result.error.format()[name] as string || ""
       });
     } else {
       setErrors({});
