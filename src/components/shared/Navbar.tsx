@@ -7,7 +7,7 @@ const Navbar = () => {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center">
-                        <Link href="/" className="flex items-center space-x-2">
+                        <Link href="/public" className="flex items-center space-x-2">
               <span className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-brand-purple to-brand-coral">
                 PartiChance
               </span>

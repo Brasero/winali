@@ -3,7 +3,7 @@ import { z } from "zod";
 import crypto from "node:crypto";
 import {NextRequest, NextResponse} from "next/server";
 import {sendVerificationMail} from "@/lib/mail";
-import {ValidateEmailTemplate} from "@/components/EmailTemplate";
+import {ValidateEmailTemplatePreLunch} from "@/components/utils/EmailTemplate";
 
 const createTable = async () => {
     return await query(`
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
 
         const verificationLink = `${process.env.NEXT_PUBLIC_APP_URL}/api/verify?token=${token}`
 
-        await sendVerificationMail(email, ValidateEmailTemplate({verifyUrl: verificationLink}))
+        await sendVerificationMail(email, ValidateEmailTemplatePreLunch({verifyUrl: verificationLink}))
 
         return NextResponse.json({message: "E-mail enregistré"})
     } catch(err) {
