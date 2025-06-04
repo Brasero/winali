@@ -12,7 +12,7 @@ import {toast} from "sonner";
 type FieldName = "email" | "first_name" | "last_name" | "birth_date" | "password" | "password_confirm";
 type ErrorFields = {
     [key in FieldName]?: {
-        _errors?: string[];
+        _errors: string[];
     };
 }
 
