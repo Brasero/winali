@@ -32,6 +32,7 @@ export default function SignIn(){
     if (!result.success) {
       setErrors({
         ...errors,
+        //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         [name]: result.error.format()[name] as string || ""
       });
     } else {
