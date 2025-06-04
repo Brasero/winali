@@ -8,7 +8,7 @@ export default function Layout({
   return (
     <>
       <Navbar/>
-      <div className={"pt-18 hero-gradient p-5 h-screen m-0 flex flex-col justify-start items-center"}>
+      <div className={"pt-18 hero-gradient p-5 min-h-screen m-0 flex flex-col justify-start items-center"}>
         <h1 className={"items-center text-center font-bold text-[32px] my-5 "}>
           <span className={" bg-linear-to-r from-brand-purple to-brand-coral bg-clip-text text-transparent"}>PartiChance</span>
         </h1>
