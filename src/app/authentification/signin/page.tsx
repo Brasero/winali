@@ -33,7 +33,7 @@ export default function SignIn(){
       setErrors({
         ...errors,
         [name]: result.error.format()[name] as string || ""
-      });
+      } as object);
     } else {
       setErrors({});
     }
@@ -43,7 +43,7 @@ export default function SignIn(){
     setIsLoading(true);
     const result = signInSchema.safeParse(user);
     if (!result.success) {
-      setErrors({...result.error.format()});
+      setErrors(result.error.format() as object);
       return;
     }
     const toastId = toast.loading("Inscription en cours ...")
