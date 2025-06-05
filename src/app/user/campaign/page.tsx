@@ -7,6 +7,11 @@ import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
 import ImagePreview from "@/components/shared/ImagePreview";
 import {addCampaignSchema} from "@/lib/zod";
+import {ZodErrors} from "@/components/utils/ZodErrors";
+import {toast} from "sonner";
+import {useSession} from "next-auth/react";
+import {toBase64Array} from "@/lib/image";
+import {useRouter} from "next/navigation";
 
 
 type CampaignData = {
@@ -27,6 +32,8 @@ type ErrorFields = {
 }
 
 export default function CreateCampaign(){
+  const session = useSession();
+  const router = useRouter()
   const [campaign, setCampaign]= useState<CampaignData>({
     title:"",
     description:"",
@@ -75,18 +82,59 @@ export default function CreateCampaign(){
     })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if(!session.data || !session.data.user){
+      toast.error("Vous devez être connecté pour créer une campagne")
+      return
+    }
     setIsLoading(true)
-    const data = addCampaignSchema.safeParse(campaign)
-    if (!data.success){
-      setErrors(data.error.format())
+    const safe = addCampaignSchema.safeParse(campaign)
+    if (!safe.success){
+      setErrors(safe.error.format())
       setIsLoading(false)
       return
     }
-    console.log(data.data)
-    setIsLoading(false)
+    const toastId = toast.loading("Création de votre campagne en cours ...")
+    setErrors({} as ErrorFields)
+    try {
+      const images = Array.from(campaign.image_urls) as Array<File>;
+      const base64Images = await toBase64Array(images);
+      const result = await fetch("/api/auth/campaigns", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...campaign,
+            image_urls: base64Images,
+        }),
+      })
+      if (!result.ok) {
+        const errorData = await result.json();
+        toast.error(errorData.error || "Une erreur est survenue", {id: toastId, duration: 5000, description: "Veuillez vérifier vos informations et réessayer."});
+        return;
+      }
+      //const response = await result.json(); // contient l'id de la campagne créée
+        toast.success("Votre campagne a été créée avec succès", {id: toastId})
+        setCampaign({
+          title: "",
+          description: "",
+          image_urls: {} as FileList,
+          ticket_price: "",
+          min_tickets: "",
+          allow_overflow: false,
+          end_date: "",
+        })
+        router.refresh()
+        // todo redirect to the campaign page
+    } catch (e) {
+        toast.error("Une erreur est survenue lors de la création de votre campagne", {id: toastId})
+        console.error(e)
+        return
+    } finally {
+      setIsLoading(false);
+    }
   }
- console.log(campaign)
   return(
     <>
       <div className={"pt-9 hero-gradient p-0 m-0 pb-9 min-w-screen flex justify-center items-start"}>
@@ -106,6 +154,7 @@ export default function CreateCampaign(){
               onChange={handleChange}
               required
             />
+            <ZodErrors error={errors.title?._errors} />
             <Label className={"mb-1"} htmlFor={"description"}>Description détaillé</Label>
             <Textarea
               className={"mb-5"}
@@ -116,6 +165,7 @@ export default function CreateCampaign(){
               onChange={handleChange}
               required
             />
+            <ZodErrors error={errors.description?._errors} />
             <Label className={"mb-1"} htmlFor={"image"}>Photos du produit</Label>
             <Input
               className={"mb-5"}
@@ -127,6 +177,7 @@ export default function CreateCampaign(){
               accept={"image/*"}
               required
             />
+            <ZodErrors error={errors.image_urls?._errors} />
             <ImagePreview files={campaign.image_urls}/>
             <CardDescription className={"flex max-sm:flex-col"}>
               <div className={"md:w-1/2 text-black"}>
@@ -141,6 +192,7 @@ export default function CreateCampaign(){
                   onChange={handleChange}
                   required
                 />
+                <ZodErrors error={errors.title?._errors} />
               </div>
               <div className={"md:w-1/2 md:ml-2 text-black"}>
                 <Label className={"mb-1"} htmlFor={"min_tickets"}>Nombre minimum de tickets</Label>
@@ -154,6 +206,7 @@ export default function CreateCampaign(){
                   onChange={handleChange}
                   required
                 />
+                <ZodErrors error={errors.min_tickets?._errors} />
               </div>
             </CardDescription>
             <Label className={"mb-1"} htmlFor={"end_date"}>Date de fin</Label>
@@ -166,6 +219,7 @@ export default function CreateCampaign(){
               onChange={handleChange}
               required
             />
+            <ZodErrors error={errors.end_date?._errors} />
             <CardAction className={"flex mb-5"}>
               <Input
                 type={"checkbox"}

@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
         INSERT INTO campaigns (seller_id, title, description, end_date, ticket_price, min_tickets, image_urls, allow_overflow)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING id
-    `, [userId, title, description, end_date, ticket_price, min_tickets, JSON.stringify(image_urls), allow_overflow || false]);
+    `, [userId, title, description, end_date, ticket_price, min_tickets, image_urls, allow_overflow || false]);
     if (result.length === 0) {
         return NextResponse.json({error: "Failed to create campaign"}, {status: 500});
     }

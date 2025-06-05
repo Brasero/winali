@@ -14,7 +14,7 @@ export default function ImagePreview({files}:ImagePreviewProps){
         Array.from(files).map((file,index) => {
           return(
             <Card className={"h-fit flex align-center p-0 overflow-hidden"} key={index}>
-              <Image alt={"Preview"} style={{width:"80px", objectFit:"cover", aspectRatio:"1/1"}} src={URL.createObjectURL(file)}/>
+              <Image alt={"Preview"} width={80} height={80} style={{width:"80px", objectFit:"cover", aspectRatio:"1/1"}} src={URL.createObjectURL(file)}/>
             </Card>
           )
         })
