@@ -33,8 +33,8 @@ export async function POST(req: NextRequest) {
     let body;
     try {
         body = await req.json();
-    } catch (error) {
-        return NextResponse.json({error: "Invalid JSON"}, {status: 400});
+    } catch (e) {
+        return NextResponse.json({error: "Invalid JSON", server_error: e}, {status: 400});
     }
     const {title, description, end_date, ticket_price, min_tickets, image_urls, allow_overflow} = body;
     if (!title || !description || !end_date || !ticket_price || !min_tickets || !image_urls) {
