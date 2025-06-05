@@ -37,7 +37,7 @@ export const addCampaignSchema = zod.object({
     description:zod.string({required_error:"La description ne peut pas être vide"})
       .min(10, "Déscription trop courte ")
       .max(255, "Déscription trop longue"),
-    image_urls:zod.instanceof(FileList),
+    image_urls:zod.unknown().transform((val) => val as FileList),
     ticket_price:zod.coerce.number({required_error: "Le prix du ticket est nécessaire"})
       .min(0,"Le prix du ticket doit être supérieur a 0€"),
     min_tickets:zod.coerce.number({required_error:"Un nombre de ticket est requis"})
