@@ -1,4 +1,5 @@
 import {Card} from "@/components/ui/card";
+import Image from "next/image";
 
 type ImagePreviewProps = {
   files:FileList;
@@ -13,7 +14,7 @@ export default function ImagePreview({files}:ImagePreviewProps){
         Array.from(files).map((file,index) => {
           return(
             <Card className={"h-fit flex align-center p-0 overflow-hidden"} key={index}>
-              <img style={{width:"80px", objectFit:"cover", aspectRatio:"1/1"}} src={URL.createObjectURL(file)}/>
+              <Image alt={"Preview"}style={{width:"80px", objectFit:"cover", aspectRatio:"1/1"}} src={URL.createObjectURL(file)}/>
             </Card>
           )
         })
