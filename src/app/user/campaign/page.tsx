@@ -8,8 +8,8 @@ import {Textarea} from "@/components/ui/textarea";
 export default function CreateCampaign(){
   return(
     <>
-      <div className={"pt-9 hero-gradient p-0 m-0 min-h-screen min-w-screen flex justify-center"}>
-        <Card className={"lg:w-[524px] sm:w-full lg:h-[580px] sm:h-full mb-2"}>
+      <div className={"pt-9 hero-gradient p-0 m-0 pb-9 min-w-screen flex justify-center items-start"}>
+        <Card className={"md:max-w-[524px] w-full  mb-2"}>
           <CardHeader>
             <h1 className={"font-bold"}> Créer une nouvelle campagne</h1>
           </CardHeader>
@@ -34,13 +34,14 @@ export default function CreateCampaign(){
             <Label htmlFor={"image"}>Photos du produit</Label>
             <Input
               className={"mb-5"}
+              multiple={true}
               type={"file"}
               name={"image_urls"}
               id={"image"}
               required
             />
             <CardDescription className={"flex max-sm:flex-col"}>
-              <div className={"lg:w-1/2 text-black"}>
+              <div className={"md:w-1/2 text-black"}>
                 <Label htmlFor={"ticket"}>Prix du ticket (€)</Label>
                 <Input
                   className={"mb-5"}
@@ -51,7 +52,7 @@ export default function CreateCampaign(){
                   required
                 />
               </div>
-              <div className={"lg:w-1/2 lg:ml-2 text-black"}>
+              <div className={"md:w-1/2 md:ml-2 text-black"}>
                 <Label htmlFor={"min_tickets"}>Nombre minimum de tickets</Label>
                 <Input
                   className={"mb-5"}

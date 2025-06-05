@@ -21,18 +21,6 @@ type UserProfile = {
 
 const Profile = async () => {
     const session = await auth()
-    console.log(session)
-    if (!session || !session.user) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <h1 className="text-2xl font-bold mb-4">Accès non autorisé</h1>
-                    <p className="text-gray-600">Veuillez vous connecter pour accéder à votre profil.</p>
-                    <Link href={"/authentification/login"} className={buttonVariants({variant: "default"})}>Se connecter</Link>
-                </div>
-            </div>
-        );
-    }
     //get user profile from database
     const rows = await query(`
         SELECT 
@@ -79,7 +67,6 @@ const Profile = async () => {
         if (result.length === 0) {
             throw new Error("Erreur lors de la mise à jour du statut vendeur");
         }
-        console.log("Statut vendeur mis à jour :", result[0]);
         revalidatePath("/user/profil");
     };
 
