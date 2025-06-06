@@ -7,17 +7,9 @@ import {Progress} from '@/components/ui/progress';
 import {Euro, ExternalLink, Target, TrendingUp} from 'lucide-react';
 import Link from "next/link";
 import {use} from "react";
+import {Campaign} from "@/lib/db";
 
-export interface Campaign {
-    id: string;
-    title: string;
-    ticket_price: number;
-    min_tickets: number;
-    ticket_sells: number;
-    is_closed: boolean;
-    created_at: string;
-    collected: number;
-}
+
 type SellerCampaignProps = {
     campaigns: Promise<Campaign[]>
 }
