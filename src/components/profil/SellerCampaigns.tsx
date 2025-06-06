@@ -8,7 +8,7 @@ import {Euro, ExternalLink, Target, TrendingUp} from 'lucide-react';
 import Link from "next/link";
 import {use} from "react";
 
-interface Campaign {
+export interface Campaign {
     id: string;
     title: string;
     ticket_price: number;

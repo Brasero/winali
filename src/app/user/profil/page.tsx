@@ -6,7 +6,7 @@ import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Mail, Calendar, Shield, LogOut, Settings, ShoppingCart, Store, ExternalLink } from 'lucide-react';
 import Link  from 'next/link';
-import SellerCampaigns from '@/components/profil/SellerCampaigns';
+import SellerCampaigns, {Campaign} from '@/components/profil/SellerCampaigns';
 import {auth, signOut} from "@/auth";
 import {getCampaignAndTicketDetailBySellerId, query} from "@/lib/db";
 import {revalidatePath} from "next/cache";
@@ -63,7 +63,7 @@ const Profile = async () => {
         lastName: rows[0].last_name,
         firstName: rows[0].first_name
     };
-    const campaigns =  getCampaignAndTicketDetailBySellerId(userProfile.id)
+    const campaigns =  getCampaignAndTicketDetailBySellerId<Promise<Campaign[]>>(userProfile.id)
     const handleSellerToggle = async (formData: FormData) => {
         "use server";
         const isSeller = formData.get("isSeller") === "on";
