@@ -11,11 +11,14 @@ import {auth, signOut} from "@/auth";
 import {getCampaignAndTicketDetailBySellerId, getUserById, query} from "@/lib/db";
 import {revalidatePath} from "next/cache";
 import {Suspense} from "react";
-
+import {redirect} from "next/navigation";
 const Profile = async () => {
     const session = await auth()
+    if(!session?.user?.id) {
+        return redirect("/")
+    }
     //get user profile from database
-    const rows = await getUserById(session?.user?.id)
+    const rows = await getUserById(session.user.id)
     if (rows.length === 0) {
         return (
             <div className="min-h-screen flex items-center justify-center">
