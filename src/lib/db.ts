@@ -1,13 +1,12 @@
 import { neon } from "@neondatabase/serverless";
-import {Campaign} from "@/components/profil/SellerCampaigns";
 
-export async function query<T = Record<string, unknown>>(
+export async function query<T = Record<string, unknown>[]>(
     query: string,
-    params?: string[]
-): Promise<T[]> {
+    params?: (string | number | boolean | unknown)[]
+): Promise<T> {
     if(!process.env.DATABASE_DATABASE_URL) throw new Error("URL de la database manquante")
     const sql = neon(process.env.DATABASE_DATABASE_URL)
-    const data = await sql.query<T[]>(query, params);
+    const data = await sql.query<T>(query, params);
     return data;
 }
 
@@ -42,7 +41,7 @@ export interface Campaign {
     collected: number;
 }
 export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promise<Campaign[]> => {
-    const rows = await query<Campaign>(`
+    const rows = await query<Campaign[]>(`
     SELECT
     c.id,c.seller_id,c.title,c.description,c.image_urls,c.ticket_price,c.min_tickets,c.end_date,c.is_closed,c.created_at,
     COALESCE(
