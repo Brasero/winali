@@ -17,6 +17,8 @@ type UserProfile = {
     isSeller: boolean;
     termsAccepted: boolean;
     termsAcceptedDate: string;
+    firstName: string;
+    lastName: string;
 }
 
 const Profile = async () => {
@@ -53,7 +55,9 @@ const Profile = async () => {
         emailVerified: rows[0].emailverified as boolean,
         isSeller: rows[0].is_seller as boolean,
         termsAccepted: rows[0].termsaccepted,
-        termsAcceptedDate: rows[0].termsaccepteddate
+        termsAcceptedDate: rows[0].termsaccepteddate,
+        lastName: rows[0].last_name,
+        firstName: rows[0].first_name
     };
     const handleSellerToggle = async (formData: FormData) => {
         "use server";

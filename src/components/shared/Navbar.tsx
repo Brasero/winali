@@ -12,13 +12,13 @@ const Navbar = async () => {
                 <div className="flex justify-between items-center">
                     <div className="flex items-center">
                         <Link href="/public" className="flex items-center space-x-2">
-              <span className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-brand-purple to-brand-coral">
-                PartiChance
-              </span>
+                          <span className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-brand-purple to-brand-coral">
+                            PartiChance
+                          </span>
                         </Link>
                     </div>
-
-                    <div className="hidden md:flex items-center space-x-8">
+                    {/*Links*/}
+                    <div className="hidden md:flex sm:gap-2 items-center gap-6">
                         <Link href="#comment-ca-marche" className="text-gray-600 hover:text-brand-purple transition-colors font-medium">
                             Comment ça marche
                         </Link>
@@ -30,23 +30,28 @@ const Navbar = async () => {
                         </Link>
                     </div>
 
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center gap-4 max-md:flex-col max-md:items-stretch">
                         {session?.user ? (
-                            <form action={async () => {
-                                "use server"
-                                await signOut()
-                            }}>
-                                <Button  className={`hidden sm:flex text-white`} variant="destructive">
-                                    <LogOut className="w-4 h-4 mr-2" />
-                                    Se déconnecter
-                                </Button>
-                            </form>
-                        ): (
                             <>
-                                <Link href={"/authentification/login"} className={`${buttonVariants({variant: "outline"})} hidden sm:flex`}>
+
+                                <form action={async () => {
+                                    "use server"
+                                    await signOut()
+                                }}>
+                                    <Button className={`text-white`} type={"submit"} variant="destructive">
+                                        <LogOut className="w-4 h-4 mr-2"/>
+                                        Se déconnecter
+                                    </Button>
+                                </form>
+                            </>
+                        ) : (
+                            <>
+                                <Link href={"/authentification/login"}
+                                      className={`${buttonVariants({variant: "outline"})} hidden sm:flex`}>
                                     Se connecter
                                 </Link>
-                                <Link href={"/authentification/signup"} className={`${buttonVariants({variant: "default"})}`}>
+                                <Link href={"/authentification/signup"}
+                                      className={`${buttonVariants({variant: "default"})}`}>
                                     S&apos;inscrire
                                 </Link>
                             </>
