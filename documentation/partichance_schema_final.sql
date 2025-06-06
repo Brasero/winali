@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS users
 );
 
 -- Table CAMPAIGNS
-CREATE TABLE IF NOT EXISTS campaigns
+CREATE TABLE IF NOT EXISTS data
 (
     id             UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
     seller_id      UUID                     NOT NULL REFERENCES users (id) ON DELETE CASCADE,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS campaigns
 CREATE TABLE IF NOT EXISTS tickets
 (
     id           UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
-    campaign_id  UUID                     NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE,
+    campaign_id  UUID                     NOT NULL REFERENCES data (id) ON DELETE CASCADE,
     buyer_id     UUID                     NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     amount_paid  NUMERIC(10, 2)           NOT NULL CHECK (amount_paid >= 0),
     purchased_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS tickets
 CREATE TABLE IF NOT EXISTS draws
 (
     id                UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
-    campaign_id       UUID                     NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE,
+    campaign_id       UUID                     NOT NULL REFERENCES data (id) ON DELETE CASCADE,
     winning_ticket_id UUID                     REFERENCES tickets (id) ON DELETE SET NULL,
     drawn_at          TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     succeeded         BOOLEAN                  NOT NULL
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS draws
 CREATE TABLE IF NOT EXISTS stripe_transactions
 (
     id                UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
-    campaign_id       UUID                     NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE,
+    campaign_id       UUID                     NOT NULL REFERENCES data (id) ON DELETE CASCADE,
     user_id           UUID                     NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     stripe_charge_id  VARCHAR(255)             NOT NULL,
     type              transaction_type         NOT NULL,

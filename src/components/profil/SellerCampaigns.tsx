@@ -1,79 +1,55 @@
+"use client"
+
 import {Card, CardContent} from '@/components/ui/card';
 import {Badge} from '@/components/ui/badge';
 import {buttonVariants} from '@/components/ui/button';
 import {Progress} from '@/components/ui/progress';
 import {Euro, ExternalLink, Target, TrendingUp} from 'lucide-react';
 import Link from "next/link";
+import {use} from "react";
+import {Campaign} from "@/lib/db";
 
-interface Campaign {
-    id: string;
-    title: string;
-    ticketsSold: number;
-    ticketsTarget: number;
-    status: 'en_cours' | 'terminee' | 'tirage_fait';
-    totalRevenue: number;
-    netRevenue: number;
-    createdDate: string;
+
+type SellerCampaignProps = {
+    campaigns: Promise<Campaign[]>
 }
 
-const SellerCampaigns = () => {
-    // Données d'exemple - à remplacer par des données réelles
-    const campaigns: Campaign[] = [{
-        id: '1',
-        title: 'Tour PC AMD Rizen 7',
-        ticketsSold: 75,
-        ticketsTarget: 125,
-        status: 'en_cours',
-        totalRevenue: 1125,
-        netRevenue: 1012.50,
-        createdDate: '2024-01-10'
-    }, {
-        id: '2',
-        title: 'Peugeot 205 turbo',
-        ticketsSold: 325,
-        ticketsTarget: 250,
-        status: 'tirage_fait',
-        totalRevenue: 3450,
-        netRevenue: 3400,
-        createdDate: '2024-01-05'
-    }, {
-        id: '3',
-        title: 'Nintendo Switch OLED',
-        ticketsSold: 45,
-        ticketsTarget: 80,
-        status: 'terminee',
-        totalRevenue: 675,
-        netRevenue: 607.50,
-        createdDate: '2024-01-01'
-    }];
 
-    const getStatusBadge = (status: Campaign['status']) => {
+const SellerCampaigns = ({campaigns}: SellerCampaignProps) => {
+    // Données d'exemple - à remplacer par des données réelles
+    const data: Campaign[] = use(campaigns)
+    const commission = 0.06;
+
+    const getStatusBadge = (status: Campaign['is_closed']) => {
         const variants = {
-            en_cours: {variant: 'default' as const, label: '🔄 En cours'},
-            terminee: {variant: 'secondary' as const, label: '⏹️ Terminée'},
-            tirage_fait: {variant: 'outline' as const, label: '✅ Tirage fait'}
+            open: {variant: 'default' as const, label: '🔄 En cours'},
+            closed: {variant: 'secondary' as const, label: '⏹️ Terminée'},
+            //tirage_fait: {variant: 'outline' as const, label: '✅ Tirage fait'}
         };
 
-        const {variant, label} = variants[status];
+        const {variant, label} = variants[status ? "closed" : "open"];
 
-        if (status === 'tirage_fait') {
-            return <Badge variant={variant} className="border-green-500 text-semibold text-green-600 ">{label}</Badge>;
-        }
+        // if (status === 'tirage_fait') {
+        //     return <Badge variant={variant} className="border-green-500 text-semibold text-green-600 ">{label}</Badge>;
+        // }
 
         return <Badge variant={variant}>{label}</Badge>;
     };
 
     const getProgressPercentage = (sold: number, target: number) => {
-        return Math.min((sold / target) * 100);
+        return Math.min((sold / target) * 100, 100);
     };
 
-    const totalRevenue = campaigns.reduce((sum, campaign) => sum + campaign.netRevenue, 0);
+    const totalRevenue = data.reduce((sum, campaign) => {
+        const brut = campaign.ticket_sells * campaign.ticket_price
+        return sum + brut - (brut * commission)
+    }, 0)
 
     return (<div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                     <TrendingUp className="w-5 h-5"/>
-                    Mes campagnes ({campaigns.length})
+                    Mes campagnes ({data.length})
                 </h3>
             </div>
 
@@ -90,19 +66,19 @@ const SellerCampaigns = () => {
                 </CardContent>
             </Card>
 
-            {campaigns.length === 0 ? (<Card>
+            {data.length === 0 ? (<Card>
                     <CardContent className="py-8 text-center">
                         <p className="text-gray-500">Aucune campagne créée pour le moment</p>
                     </CardContent>
                 </Card>) : (
                     <div className="space-y-4">
-                    {campaigns.map((campaign) => (<Card key={campaign.id} className="hover:shadow-md transition-shadow">
+                    {data.map((campaign) => (<Card key={campaign.id} className="hover:shadow-md transition-shadow">
                             <CardContent className="p-6">
                                 <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
                                     <div className="flex-1">
                                         <div className="flex items-start justify-between mb-4">
                                             <h4 className="font-semibold text-lg">{campaign.title}</h4>
-                                            {getStatusBadge(campaign.status)}
+                                            {getStatusBadge(campaign.is_closed)}
                                         </div>
 
                                         {/* Progression */}
@@ -113,15 +89,15 @@ const SellerCampaigns = () => {
                                                         Progression
                                                 </span>
                                                 <span className="text-sm text-gray-600">
-                                                    {campaign.ticketsSold} / {campaign.ticketsTarget} tickets
+                                                    {campaign.ticket_sells} / {campaign.min_tickets} tickets
                                                 </span>
                                             </div>
                                             <Progress
-                                                value={getProgressPercentage(campaign.ticketsSold, campaign.ticketsTarget)}
+                                                value={getProgressPercentage(campaign.ticket_sells, campaign.min_tickets)}
                                                 className="h-3"
                                             />
                                             <p className="text-xs text-gray-500 mt-1">
-                                                {Math.round(getProgressPercentage(campaign.ticketsSold, campaign.ticketsTarget))}%
+                                                {Math.round(getProgressPercentage(campaign.ticket_sells, campaign.min_tickets))}%
                                                 de l&apos;objectif atteint
                                             </p>
                                         </div>
@@ -130,11 +106,11 @@ const SellerCampaigns = () => {
                                         <div className="grid grid-cols-2 gap-4 text-sm">
                                             <div>
                                                 <p className="text-gray-500">Revenus bruts</p>
-                                                <p className="font-semibold">{campaign.totalRevenue.toFixed(2)}€</p>
+                                                <p className="font-semibold">{(campaign.ticket_sells * campaign.ticket_price).toFixed(2)}€</p>
                                             </div>
                                             <div>
                                                 <p className="text-gray-500">Revenus nets</p>
-                                                <p className="font-semibold text-green-600">{campaign.netRevenue.toFixed(2)}€</p>
+                                                <p className="font-semibold text-green-600">{((campaign.ticket_sells * campaign.ticket_price) - (campaign.ticket_sells * campaign.ticket_price) * commission).toFixed(2)}€</p>
                                             </div>
                                         </div>
                                     </div>
@@ -149,7 +125,7 @@ const SellerCampaigns = () => {
                                         </Link>
 
                                         <p className="text-xs text-gray-500 text-center">
-                                            Créée le {new Date(campaign.createdDate).toLocaleDateString('fr-FR')}
+                                            Créée le {new Date(campaign.created_at).toLocaleDateString('fr-FR')}
                                         </p>
                                     </div>
                                 </div>
