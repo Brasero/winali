@@ -41,8 +41,8 @@ export interface Campaign {
     collected: number;
     seller_id: string;
     user?: {
-        last_name: string;
-        first_name: string;
+        last_name: unknown;
+        first_name: unknown;
     }
 }
 export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promise<Campaign[]> => {
