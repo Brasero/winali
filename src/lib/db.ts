@@ -42,6 +42,7 @@ export interface Campaign {
     created_at: string;
     collected: number;
     seller_id: string;
+    tickets: [];
     user?: {
         last_name: unknown;
         first_name: unknown;
@@ -54,7 +55,8 @@ export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promi
     COALESCE(
       json_agg(t.*) FILTER (WHERE t.id IS NOT NULL),
         '[]'    
-    ) AS tickets
+    ) AS tickets,
+    count(t.id) AS ticket_sells
     FROM campaigns c
     LEFT JOIN tickets t
     ON c.id= t.campaign_id
