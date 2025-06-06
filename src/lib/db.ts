@@ -40,6 +40,10 @@ export interface Campaign {
     created_at: string;
     collected: number;
     seller_id: string;
+    user?: {
+        last_name: string;
+        first_name: string;
+    }
 }
 export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promise<Campaign[]> => {
     const rows = await query<Campaign[]>(`
@@ -58,7 +62,7 @@ export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promi
     return rows
 }
 export const getCampaignAndTicketDetailBySellerId = async (sellerId: string) => {
-    return await query(`
+    return await query<Campaign[]>(`
         SELECT 
         c.id, c.created_at, c.end_date, c.description, c.description, c.min_tickets, c.title, c.ticket_price, c.is_closed,
         COALESCE(
