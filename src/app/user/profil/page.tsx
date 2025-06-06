@@ -63,7 +63,7 @@ const Profile = async () => {
         lastName: rows[0].last_name,
         firstName: rows[0].first_name
     };
-    const campaigns =  getCampaignAndTicketDetailBySellerId<Promise<Campaign[]>>(userProfile.id)
+    const campaigns: Promise<Campaign[]> =  getCampaignAndTicketDetailBySellerId(userProfile.id)
     const handleSellerToggle = async (formData: FormData) => {
         "use server";
         const isSeller = formData.get("isSeller") === "on";
