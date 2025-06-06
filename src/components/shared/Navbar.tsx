@@ -40,8 +40,8 @@ const Navbar = async () => {
                     <div className="flex items-center gap-4">
                         {session?.user ? (
                             <>
-                                <DropdownMenu asChild>
-                                    <DropdownMenuTrigger className={`${buttonVariants({variant: "outline"})} flex gap-1 flex-row-reverse align-center`}><span className={"hidden md:flex"}>Menu</span> <Menu /> </DropdownMenuTrigger>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger className={`${buttonVariants({variant: "outline"})} focus-visible:ring-transparent flex gap-1 flex-row-reverse align-center`}><span className={"hidden md:flex"}>Menu</span> <Menu /> </DropdownMenuTrigger>
                                     <DropdownMenuContent>
                                         <DropdownMenuLabel>{"é".toUpperCase()}space client</DropdownMenuLabel>
                                         <DropdownMenuSeparator/>
