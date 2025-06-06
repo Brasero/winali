@@ -22,16 +22,16 @@ const SellerCampaigns = ({campaigns}: SellerCampaignProps) => {
 
     const getStatusBadge = (status: Campaign['is_closed']) => {
         const variants = {
-            false: {variant: 'default' as const, label: '🔄 En cours'},
-            true: {variant: 'secondary' as const, label: '⏹️ Terminée'},
-            tirage_fait: {variant: 'outline' as const, label: '✅ Tirage fait'}
+            open: {variant: 'default' as const, label: '🔄 En cours'},
+            closed: {variant: 'secondary' as const, label: '⏹️ Terminée'},
+            //tirage_fait: {variant: 'outline' as const, label: '✅ Tirage fait'}
         };
 
-        const {variant, label} = variants[status];
+        const {variant, label} = variants[status ? "closed" : "open"];
 
-        if (status === 'tirage_fait') {
-            return <Badge variant={variant} className="border-green-500 text-semibold text-green-600 ">{label}</Badge>;
-        }
+        // if (status === 'tirage_fait') {
+        //     return <Badge variant={variant} className="border-green-500 text-semibold text-green-600 ">{label}</Badge>;
+        // }
 
         return <Badge variant={variant}>{label}</Badge>;
     };
