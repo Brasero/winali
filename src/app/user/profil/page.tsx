@@ -8,34 +8,17 @@ import { Mail, Calendar, Shield, LogOut, Settings, ShoppingCart, Store, External
 import Link  from 'next/link';
 import SellerCampaigns from '@/components/profil/SellerCampaigns';
 import {auth, signOut} from "@/auth";
-import {query} from "@/lib/db";
+import {getCampaignAndTicketDetailBySellerId, getUserById, query} from "@/lib/db";
 import {revalidatePath} from "next/cache";
-type UserProfile = {
-    email: string;
-    registrationDate: string;
-    emailVerified: boolean;
-    isSeller: boolean;
-    termsAccepted: boolean;
-    termsAcceptedDate: string;
-}
-
+import {Suspense} from "react";
+import {redirect} from "next/navigation";
 const Profile = async () => {
     const session = await auth()
+    if(!session?.user?.id) {
+        return redirect("/")
+    }
     //get user profile from database
-    const rows = await query(`
-        SELECT 
-            email,
-            created_at AS registrationDate,
-            is_email_verified AS emailVerified,
-            is_seller,
-            TRUE AS termsAccepted,
-            created_at AS termsAcceptedDate,
-            first_name,
-            last_name,
-            birth_date
-        FROM users
-        WHERE id = $1
-    `, [session?.user?.id as string]);
+    const rows = await getUserById(session.user.id)
     if (rows.length === 0) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -47,14 +30,18 @@ const Profile = async () => {
             </div>
         );
     }
-    const userProfile: UserProfile = {
+    const userProfile = {
+        id: rows[0].id,
         email: rows[0].email,
-        registrationDate: rows[0].registrationdate as string,
-        emailVerified: rows[0].emailverified as boolean,
+        registrationDate: rows[0].created_at as string,
+        emailVerified: true,
         isSeller: rows[0].is_seller as boolean,
-        termsAccepted: rows[0].termsaccepted,
-        termsAcceptedDate: rows[0].termsaccepteddate
+        termsAccepted: true,
+        termsAcceptedDate: rows[0].created_at,
+        lastName: rows[0].last_name,
+        firstName: rows[0].first_name
     };
+    const campaigns =  getCampaignAndTicketDetailBySellerId(userProfile.id)
     const handleSellerToggle = async (formData: FormData) => {
         "use server";
         const isSeller = formData.get("isSeller") === "on";
@@ -125,7 +112,7 @@ const Profile = async () => {
                                 "use server"
                                 await signOut({redirectTo: "/authentification/login"});
                             }}>
-                                <Button className={"text-white"} variant="destructive">
+                                <Button className={"text-white max-sm:w-full"} variant="destructive">
                                     <LogOut className="w-4 h-4 mr-2" />
                                     Se déconnecter
                                 </Button>
@@ -145,7 +132,7 @@ const Profile = async () => {
                             <Link href="/user/participations">
                                 <Button variant="outline" size="sm" className="flex items-center gap-2">
                                     <ExternalLink className="w-4 h-4" />
-                                    Voir toutes mes participations
+                                    <span className={"hidden md:flex"}>Voir toutes mes participations</span>
                                 </Button>
                             </Link>
                         </CardTitle>
@@ -188,7 +175,7 @@ const Profile = async () => {
 
                 {/* Section Vendeur */}
                 {userProfile.isSeller && (
-                    <Card>
+                    <Card id={"seller_section"}>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Store className="w-5 h-5" />
@@ -196,7 +183,9 @@ const Profile = async () => {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <SellerCampaigns />
+                            <Suspense fallback={<div>Chargement ...</div>}>
+                                <SellerCampaigns campaigns={campaigns} />
+                            </Suspense>
                         </CardContent>
                     </Card>
                 )}

@@ -23,9 +23,9 @@ const Admin = () => {
                     <p className="text-gray-600">Gestion et supervision de la plateforme</p>
                 </div>
 
-                <Tabs defaultValue="campaigns" className="w-full">
+                <Tabs defaultValue="data" className="w-full">
                     <TabsList className="grid w-full grid-cols-5 mb-8">
-                        <TabsTrigger value="campaigns" className="flex items-center gap-2">
+                        <TabsTrigger value="data" className="flex items-center gap-2">
                             <Ticket className="w-4 h-4" />
                             Campagnes
                         </TabsTrigger>
@@ -46,7 +46,7 @@ const Admin = () => {
                         </TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="campaigns">
+                    <TabsContent value="data">
                         <Card>
                             <CardHeader>
                                 <CardTitle>Liste des campagnes</CardTitle>

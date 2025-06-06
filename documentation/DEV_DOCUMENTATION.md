@@ -12,15 +12,15 @@
 
 ## 🏠 Campagnes
 
-- ``GET /campaigns`` : liste paginée des campagnes actives
+- ``GET /data`` : liste paginée des campagnes actives
 
-- ``POST /campaigns`` : création d'une nouvelle campagne (auth requise)
+- ``POST /data`` : création d'une nouvelle campagne (auth requise)
 
-- ``GET /campaigns/:id`` : détails d'une campagne
+- ``GET /data/:id`` : détails d'une campagne
 
 ## 🎫 Tickets
 
-- ``POST /campaigns/:id/tickets`` : achat de X tickets
+- ``POST /data/:id/tickets`` : achat de X tickets
 
 - - Redirection vers Stripe Checkout avec ID de session retourné
 - - Chaque ticket = une chance de gagner (1 ligne par ticket)
@@ -37,7 +37,7 @@
 
 ## 🌟 Tirage
 
-- ``POST /campaigns/:id/draw``
+- ``POST /data/:id/draw``
 
 - - Tirage automatique ou forcé (admin)
 
@@ -53,7 +53,7 @@
 
 - Format de réponse JSON
 
-- Middleware de vérification d'authentification pour toutes les routes /me, /campaigns, /tickets
+- Middleware de vérification d'authentification pour toutes les routes /me, /data, /tickets
 
 ## 🚀 Roadmap technique
 
