@@ -28,8 +28,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     return null
                 }
 
-                const rows = await query(`
-                SELECT id, email, password_hash, is_email_verified, first_name, last_name, birth_date
+                const rows = await query<{id:string; email:string; password_hash:string; is_email_verified: boolean}[]>(`
+                SELECT id, email, password_hash, is_email_verified
                 FROM users
                 WHERE email = $1
                 `, [credentials.email as string]);
@@ -52,9 +52,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 return {
                     id: user.id,
                     email: user.email,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    birth_date: user.birth_date,
                 }
             }
         })
