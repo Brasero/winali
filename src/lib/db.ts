@@ -8,8 +8,8 @@ export async function query<T = Record<string, unknown>[]>(
 ): Promise<T> {
     if(!process.env.DATABASE_DATABASE_URL) throw new Error("URL de la database manquante")
     const sql = neon(process.env.DATABASE_DATABASE_URL)
-    const data = await sql.query<T>(query, params);
-    return data;
+    const data = await sql.query(query, params);
+    return data as T;
 }
 
 export const getCampaignsById = async (campaignId:string) => {
