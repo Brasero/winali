@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({error: "Token invalide"}, {status: 404})
         }
         const subscriber = res[0];
-        await query(
+        await query<string>(
             `UPDATE subscribers
             SET is_verified = TRUE, verification_token = NULL
             WHERE id = $1`,
