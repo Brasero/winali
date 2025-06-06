@@ -1,6 +1,6 @@
 import {NextRequest, NextResponse} from "next/server";
 import {auth} from "@/auth";
-import {query} from "@/lib/db";
+import {getCampaignAndTicketByCampaignId, getUserById, query} from "@/lib/db";
 
 export async function POST(req: NextRequest) {
     const session = await auth();
@@ -63,4 +63,27 @@ export async function POST(req: NextRequest) {
     }
     const campaignId = result[0].id;
     return NextResponse.json({message: "Campaign created successfully", campaignId}, {status: 201});
+}
+
+export async function GET(req:NextRequest){
+    const id = req.nextUrl.searchParams.get("id")
+    if(!id){
+        return NextResponse.json({error:"No ressources"},{status:400})
+    }
+
+    const rows = await getCampaignAndTicketByCampaignId(id)
+    if(rows.length === 0){
+        return NextResponse.json({error:"Campaign not found"},{status:400})
+    }
+    const campaign = rows[0]
+    const userRows = await getUserById(campaign.seller_id)
+    if(userRows.length === 0){
+        return NextResponse.json({error:"Seller not found"},{status:400})
+    }
+    console.log(campaign)
+    campaign.user = {
+        last_name:userRows[0].last_name,
+        first_name:userRows[0].first_name
+    }
+    return NextResponse.json({data:campaign},{status:200})
 }
