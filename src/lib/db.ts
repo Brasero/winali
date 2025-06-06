@@ -39,6 +39,7 @@ export interface Campaign {
     is_closed: boolean;
     created_at: string;
     collected: number;
+    seller_id: string;
 }
 export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promise<Campaign[]> => {
     const rows = await query<Campaign[]>(`
