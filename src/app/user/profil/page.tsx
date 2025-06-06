@@ -8,9 +8,11 @@ import { Mail, Calendar, Shield, LogOut, Settings, ShoppingCart, Store, External
 import Link  from 'next/link';
 import SellerCampaigns from '@/components/profil/SellerCampaigns';
 import {auth, signOut} from "@/auth";
-import {query} from "@/lib/db";
+import {getCampaignAndTicketDetailBySellerId, query} from "@/lib/db";
 import {revalidatePath} from "next/cache";
+import {Suspense} from "react";
 type UserProfile = {
+    id: string;
     email: string;
     registrationDate: string;
     emailVerified: boolean;
@@ -26,6 +28,7 @@ const Profile = async () => {
     //get user profile from database
     const rows = await query(`
         SELECT 
+            id,
             email,
             created_at AS registrationDate,
             is_email_verified AS emailVerified,
@@ -50,6 +53,7 @@ const Profile = async () => {
         );
     }
     const userProfile: UserProfile = {
+        id: rows[0].id,
         email: rows[0].email,
         registrationDate: rows[0].registrationdate as string,
         emailVerified: rows[0].emailverified as boolean,
@@ -59,6 +63,7 @@ const Profile = async () => {
         lastName: rows[0].last_name,
         firstName: rows[0].first_name
     };
+    const campaigns = userProfile.isSeller ? getCampaignAndTicketDetailBySellerId(userProfile.id) : []
     const handleSellerToggle = async (formData: FormData) => {
         "use server";
         const isSeller = formData.get("isSeller") === "on";
@@ -129,7 +134,7 @@ const Profile = async () => {
                                 "use server"
                                 await signOut({redirectTo: "/authentification/login"});
                             }}>
-                                <Button className={"text-white"} variant="destructive">
+                                <Button className={"text-white max-sm:w-full"} variant="destructive">
                                     <LogOut className="w-4 h-4 mr-2" />
                                     Se déconnecter
                                 </Button>
@@ -149,7 +154,7 @@ const Profile = async () => {
                             <Link href="/user/participations">
                                 <Button variant="outline" size="sm" className="flex items-center gap-2">
                                     <ExternalLink className="w-4 h-4" />
-                                    Voir toutes mes participations
+                                    <span className={"hidden md:flex"}>Voir toutes mes participations</span>
                                 </Button>
                             </Link>
                         </CardTitle>
@@ -192,7 +197,7 @@ const Profile = async () => {
 
                 {/* Section Vendeur */}
                 {userProfile.isSeller && (
-                    <Card>
+                    <Card id={"seller_section"}>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Store className="w-5 h-5" />
@@ -200,7 +205,9 @@ const Profile = async () => {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <SellerCampaigns />
+                            <Suspense fallback={<div>Chargement ...</div>}>
+                                <SellerCampaigns campaigns={campaigns} />
+                            </Suspense>
                         </CardContent>
                     </Card>
                 )}

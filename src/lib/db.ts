@@ -46,6 +46,22 @@ export const getCampaignAndTicketByCampaignId = async (campaignId:string) => {
     `,[campaignId])
     return rows
 }
+export const getCampaignAndTicketDetailBySellerId = async (sellerId: string) => {
+    return await query(`
+        SELECT 
+        c.id, c.created_at, c.end_date, c.description, c.description, c.min_tickets, c.title, c.ticket_price, c.is_closed,
+        COALESCE(
+            json_agg(t.*) FILTER ( WHERE t.id IS NOT NULL),
+            '[]'
+        ) AS tickets,
+        count(t.id) AS ticket_sells
+        FROM campaigns c
+        LEFT JOIN tickets t 
+        ON t.campaign_id = c.id
+        WHERE c.seller_id = $1
+        GROUP BY c.id
+    `, [sellerId])
+}
 export const getUserById = async (userId:string) => {
     const rows = await query(`
         SELECT * FROM users WHERE id= $1
