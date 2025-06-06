@@ -37,11 +37,12 @@ export interface Campaign {
     title: string;
     ticket_price: number;
     min_tickets: number;
-    ticket_sells: number;
+    ticket_sells?: number;
     is_closed: boolean;
     created_at: string;
     collected: number;
     seller_id: string;
+    tickets: [];
     user?: {
         last_name: unknown;
         first_name: unknown;
