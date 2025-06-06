@@ -8,39 +8,14 @@ import { Mail, Calendar, Shield, LogOut, Settings, ShoppingCart, Store, External
 import Link  from 'next/link';
 import SellerCampaigns from '@/components/profil/SellerCampaigns';
 import {auth, signOut} from "@/auth";
-import {getCampaignAndTicketDetailBySellerId, query} from "@/lib/db";
+import {getCampaignAndTicketDetailBySellerId, getUserById, query} from "@/lib/db";
 import {revalidatePath} from "next/cache";
 import {Suspense} from "react";
-type UserProfile = {
-    id: string;
-    email: string;
-    registrationDate: string;
-    emailVerified: boolean;
-    isSeller: boolean;
-    termsAccepted: boolean;
-    termsAcceptedDate: string;
-    firstName: string;
-    lastName: string;
-}
 
 const Profile = async () => {
     const session = await auth()
     //get user profile from database
-    const rows = await query(`
-        SELECT 
-            id,
-            email,
-            created_at AS registrationDate,
-            is_email_verified AS emailVerified,
-            is_seller,
-            TRUE AS termsAccepted,
-            created_at AS termsAcceptedDate,
-            first_name,
-            last_name,
-            birth_date
-        FROM users
-        WHERE id = $1
-    `, [session?.user?.id as string]);
+    const rows = await getUserById(session?.user?.id)
     if (rows.length === 0) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -52,14 +27,14 @@ const Profile = async () => {
             </div>
         );
     }
-    const userProfile: UserProfile = {
+    const userProfile = {
         id: rows[0].id,
         email: rows[0].email,
-        registrationDate: rows[0].registrationdate as string,
-        emailVerified: rows[0].emailverified as boolean,
+        registrationDate: rows[0].created_at as string,
+        emailVerified: true,
         isSeller: rows[0].is_seller as boolean,
-        termsAccepted: rows[0].termsaccepted,
-        termsAcceptedDate: rows[0].termsaccepteddate,
+        termsAccepted: true,
+        termsAcceptedDate: rows[0].created_at,
         lastName: rows[0].last_name,
         firstName: rows[0].first_name
     };

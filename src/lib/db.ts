@@ -1,4 +1,6 @@
 import { neon } from "@neondatabase/serverless";
+import {util} from "zod";
+import Omit = util.Omit;
 
 export async function query<T = Record<string, unknown>[]>(
     query: string,
@@ -77,9 +79,36 @@ export const getCampaignAndTicketDetailBySellerId = async (sellerId: string) => 
         GROUP BY c.id
     `, [sellerId])
 }
+
+export type TUser = {
+    id: string;
+    email: string;
+    password_hash: string;
+    is_email_verified: boolean;
+    created_at: string;
+    updated_at: string;
+    first_name: string;
+    last_name: string;
+    birth_date: string;
+    validation_token: string | null;
+    is_seller: boolean;
+}
+
+export type TSafeUser = Omit<TUser, "password_hash" | "validation_token">
+
 export const getUserById = async (userId:string) => {
-    const rows = await query(`
-        SELECT * FROM users WHERE id= $1
+    const rows = await query<TSafeUser[]>(`
+        SELECT 
+        id,
+        first_name,
+        last_name,
+        email,
+        is_email_verified,
+        is_seller,
+        created_at,
+        birth_date,
+        updated_at
+        FROM users WHERE id= $1
     `,[userId])
     return rows
 }
