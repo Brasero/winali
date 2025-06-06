@@ -18,9 +18,12 @@ interface Campaign {
     created_at: string;
     collected: number;
 }
+type SellerCampaignProps = {
+    campaigns: Promise<Campaign[]>
+}
 
 
-const SellerCampaigns = ({campaigns}) => {
+const SellerCampaigns = ({campaigns}: SellerCampaignProps) => {
     // Données d'exemple - à remplacer par des données réelles
     const data: Campaign[] = use(campaigns)
     const commission = 0.06;
