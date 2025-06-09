@@ -42,6 +42,7 @@ export interface Campaign {
     created_at: string;
     collected: number;
     seller_id: string;
+    allow_overflow: boolean;
     tickets: [];
     user?: {
         last_name: unknown;
@@ -51,7 +52,7 @@ export interface Campaign {
 export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promise<Campaign[]> => {
     const rows = await query<Campaign[]>(`
     SELECT
-    c.id,c.seller_id,c.title,c.description,c.image_urls,c.ticket_price,c.min_tickets,c.end_date,c.is_closed,c.created_at,
+    c.id,c.seller_id,c.title,c.description,c.image_urls,c.ticket_price,c.min_tickets,c.end_date,c.is_closed,c.created_at,c.allow_overflow,
     COALESCE(
       json_agg(t.*) FILTER (WHERE t.id IS NOT NULL),
         '[]'    
