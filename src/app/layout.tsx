@@ -3,6 +3,8 @@ import {Inter} from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import {SessionProvider} from "next-auth/react";
+import Navbar from "@/components/shared/Navbar";
+import Footer from "@/components/shared/Footer";
 
 const inter = Inter({subsets: ["latin"]})
 
@@ -32,7 +34,14 @@ export default function RootLayout({
     >
     <Toaster closeButton position={"bottom-right"} duration={3000} richColors />
     <SessionProvider>
-        {children}
+        {
+            process.env.ENVIRONMENT === "development" ? (
+                <>
+                    <Navbar />
+                    {children}
+                    <Footer />
+                </>) : (children)
+        }
     </SessionProvider>
     </body>
     </html>
