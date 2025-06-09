@@ -88,8 +88,6 @@ const Hero = async () => {
                                         </div>
                                         <Progress
                                             value={progressPercentage}
-                                            className="h-2 bg-gray-100"
-                                            indicatorClassName="bg-gradient-to-r from-brand-purple to-brand-coral"
                                         />
                                     </div>
 
