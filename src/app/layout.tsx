@@ -40,7 +40,7 @@ export default function RootLayout({
                     <Navbar />
                     {children}
                     <Footer />
-                </>) : ({children})
+                </>) : (children)
         }
     </SessionProvider>
     </body>
