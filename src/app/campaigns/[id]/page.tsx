@@ -10,12 +10,12 @@ export default async function Buyer({params}:{params:Promise<{id:string}>}){
   const pourcent = Math.round((campaign.ticket_sells / campaign.min_tickets) * 100)
   console.log(campaign)
 return(
-  <div className={"w-full"}>
-    <div className={"flex justify-center align-start"}>
-      <div className={"w-[541px] pb-17 px-15 "}>
+  <div className={"w-full p-5"}>
+    <div className={"flex flex-col lg:flex-row justify-center align-center lg:align-start"}>
+      <div className={"max-w-[541px] w-full pb-17 px-0 md:px-15 flex flex-col items-center"}>
         <CampaignImage images={campaign.image_urls}/>
       </div>
-      <div className={"w-1/2 flex flex-col gap-[10px]"}>
+      <div className={"lg:w-1/2 flex flex-col gap-[10px]"}>
         <h1 className={"font-bold text-2xl"}>{campaign.title}</h1>
         <p className={"text-muted-foreground"}>Vendu par {campaign.user.first_name} {campaign.user.last_name}</p>
         <div className={"flex justify-between pt-6"}>
@@ -49,9 +49,9 @@ return(
         </Card>
       </div>
     </div>
-    <div className={"flex justify-center"}>
+    <div className={"flex justify-center pb-6 mt-[10px]"}>
       <div className={"flex flex-col max-w-[1440px] w-full"}>
-        <h1 className={"text-2xl font-bold"}>Déscription</h1>
+        <h1 className={"text-2xl font-bold"}>Description</h1>
         <p>{campaign.description}</p>
       </div>
     </div>

@@ -6,7 +6,7 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="col-span-1 md:col-span-1">
             <span className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-brand-purple to-brand-coral">
-              PartiChance
+              Winali
             </span>
                         <p className="mt-4 text-gray-600">
                             Un nouveau moyen de vendre et d&apos;acquérir des biens, via un système de ticket et tirage au sort.
@@ -46,7 +46,7 @@ const Footer = () => {
 
                 <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
                     <p className="text-gray-500 text-sm mb-4 md:mb-0">
-                        © {new Date().getFullYear()} PartiChance. Tous droits réservés.
+                        © {new Date().getFullYear()} Winali. Tous droits réservés.
                     </p>
                     <div className="flex space-x-6">
                         <a href="#" className="text-gray-500 hover:text-brand-purple">

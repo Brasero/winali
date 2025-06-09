@@ -7,8 +7,15 @@ export default auth((req) => {
 
     const isPrivateRoute = privateRoute.includes(nextUrl.pathname);
     const isAuthRoute = authRoute.includes(nextUrl.pathname);
+    // Verifie si la route est une route d'achat de ticket (indisponible non connécté)
+    const isCampaignRoute = nextUrl.pathname.startsWith("/campaigns") && nextUrl.pathname !== "/campaigns";
 
     if (isPrivateRoute && !isLoggedIn) {
+        const loginUrl = new URL("/authentification/login", nextUrl.origin);
+        return Response.redirect(loginUrl);
+    }
+
+    if (isCampaignRoute && !isLoggedIn) {
         const loginUrl = new URL("/authentification/login", nextUrl.origin);
         return Response.redirect(loginUrl);
     }
@@ -22,5 +29,5 @@ export default auth((req) => {
 })
 
 export const config = {
-    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"]
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)", "/campaigns/:path*"],
 }
