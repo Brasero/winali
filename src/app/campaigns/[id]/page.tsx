@@ -49,9 +49,11 @@ return(
         </Card>
       </div>
     </div>
-    <div>
-      <h1 className={"font-bold"}>Déscription</h1>
-      <p>{campaign.description}</p>
+    <div className={"flex justify-center"}>
+      <div className={"flex flex-col max-w-[1440px] w-full"}>
+        <h1 className={"text-2xl font-bold"}>Déscription</h1>
+        <p>{campaign.description}</p>
+      </div>
     </div>
   </div>
 )
