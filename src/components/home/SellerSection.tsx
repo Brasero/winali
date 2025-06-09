@@ -3,7 +3,7 @@ import { Image, Ticket, DollarSign, Users } from 'lucide-react';
 const SellerSection = () => {
     const steps = [
         {
-            icon: <Image alt={"alt"} className="h-8 w-8 text-brand-purple" />,
+            icon: <Image className="h-8 w-8 text-brand-purple" />,
             title: "Créez votre campagne",
             description: "Ajoutez des photos, une description et fixez la valeur de votre bien."
         },
