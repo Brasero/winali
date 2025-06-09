@@ -34,9 +34,14 @@ export default function RootLayout({
     >
     <Toaster closeButton position={"bottom-right"} duration={3000} richColors />
     <SessionProvider>
-        <Navbar />
-        {children}
-        <Footer />
+        {
+            process.env.ENVIRONMENT === "development" ? (
+                <>
+                    <Navbar />
+                    {children}
+                    <Footer />
+                </>) : ({children})
+        }
     </SessionProvider>
     </body>
     </html>
