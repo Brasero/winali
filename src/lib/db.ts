@@ -66,6 +66,61 @@ export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promi
     `,[campaignId])
     return rows
 }
+
+export interface HeroCampaign extends Campaign {
+    description: string;
+    image_urls: string[];
+}
+
+export const getHeroCampaign = async () => {
+    return await query<HeroCampaign[]>(`
+        SELECT 
+        c.id, c.created_at, c.end_date, c.description, c.min_tickets, c.title, c.ticket_price, c.is_closed, c.image_urls,
+        COALESCE(
+            json_agg(t.*) FILTER ( WHERE t.id IS NOT NULL),
+            '[]'
+        ) AS tickets,
+        count(t.id) AS ticket_sells
+        FROM campaigns c
+        LEFT JOIN tickets t 
+        ON t.campaign_id = c.id
+        WHERE c.is_closed = false
+        GROUP BY c.created_at, c.id
+        ORDER BY c.created_at DESC
+        LIMIT 1
+    
+    `)
+}
+
+export type BuyerSectionCampaign = Omit<HeroCampaign, "tickets" | "ticket_sells" | "min_tickets" | "ticket_price" > & {
+    total_tickets: number;
+    ticket_price: number;
+    tickets_sold: number;
+}
+
+export const getBuyerSectionCampaigns = async () => {
+    return await query<BuyerSectionCampaign[]>(`
+        SELECT 
+        c.id, 
+        c.created_at, 
+        c.end_date, 
+        c.description, 
+        c.min_tickets AS total_tickets, 
+        c.title, 
+        c.ticket_price AS ticket_price, 
+        c.is_closed, 
+        c.image_urls,
+        count(t.id) AS tickets_sold
+        FROM campaigns c
+        LEFT JOIN tickets t 
+        ON t.campaign_id = c.id
+        WHERE c.is_closed = false
+        GROUP BY c.id, c.created_at
+        ORDER BY c.created_at DESC
+        LIMIT 3
+    `)
+
+}
 export const getCampaignAndTicketDetailBySellerId = async (sellerId: string) => {
     return await query<Campaign[]>(`
         SELECT 
@@ -114,4 +169,30 @@ export const getUserById = async (userId:string) => {
         FROM users WHERE id= $1
     `,[userId])
     return rows
+}
+
+export interface IWinner {
+    first_name: string;
+    last_name: string;
+    item: string;
+    ticket_number: string;
+    date: string;
+    image: string;
+}
+export const getTwoLastWinner = async () => {
+    return await query<IWinner[]>(`
+        SELECT 
+        u.first_name,
+        u.last_name,
+        c.title AS item,
+        t.id AS ticket_number,
+        t.purchased_at AS date,
+        c.image_urls[1] AS image
+        FROM tickets t
+        JOIN campaigns c ON t.campaign_id = c.id
+        JOIN users u ON t.buyer_id = u.id
+        WHERE c.is_closed = true
+        ORDER BY t.purchased_at DESC
+        LIMIT 2
+    `)
 }
