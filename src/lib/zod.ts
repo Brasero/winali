@@ -15,7 +15,8 @@ export const signInSchema = zod.object({
         .min(8, "Le mot de passe doit contenir au moins 8 caractères")
         .max(128, "Le mot de passe ne peut pas dépasser 128 caractères")
         .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$.!%*?&])[A-Za-z\d@$.!%*?&]{8,}$/, "Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"),
-    "password_confirm": zod.string({required_error: "La confirmation du mot de passe est requise"})
+    "password_confirm": zod.string({required_error: "La confirmation du mot de passe est requise"}),
+    "terms": zod.boolean({required_error: "Vous devez accepter les conditions d'utilisation"})
 }).refine((data) => data.password === data.password_confirm, {
     message: "Les mots de passe ne correspondent pas", path: ["password_confirm"],
 })
