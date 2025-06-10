@@ -28,7 +28,8 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({error: "Missing metadata in session"}, {status: 400});
         }
         const totalParsed = parseFloat(total || "0");
-        if (isNaN(ticketCount) || isNaN(totalParsed)) {
+        const ticketCountParsed = parseInt(ticketCount, 10);
+        if (isNaN(ticketCountParsed) || isNaN(totalParsed)) {
             console.error("Invalid quantity or total in session metadata:", ticketCount, total);
             return NextResponse.json({error: "Invalid quantity or total"}, {status: 400});
         }
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
         }
         const stripeTxId = txRows[0].id;
         // Insert the ticket purchase into the database
-        for (let i = 0; i < ticketCount; i++) {
+        for (let i = 0; i < ticketCountParsed; i++) {
             const ticket_rows = await query(
                 `INSERT INTO tickets (campaign_id, buyer_id, amount_paid) VALUES ($1, $2, $3) RETURNING id`,
                 [campaignId, userId, ticketPrice]

@@ -23,7 +23,6 @@ export async function POST(req: NextRequest, {params}: {params: Promise<{id: str
     const stripeSession = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
-
         line_items: [{
             price_data: {
                 currency: "eur",
