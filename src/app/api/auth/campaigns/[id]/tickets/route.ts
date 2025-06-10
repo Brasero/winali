@@ -28,7 +28,7 @@ export async function POST(req: NextRequest, {params}: {params: Promise<{id: str
             price_data: {
                 currency: "eur",
                 product_data: {name: `Ticket ${campaign.title} x${quantity}`, description: campaign.description},
-                unit_amount: parseInt(campaign.ticket_price * 100)
+                unit_amount: campaign.ticket_price * 100
             },
             quantity: parseInt(quantity),
         }],
