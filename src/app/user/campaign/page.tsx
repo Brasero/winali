@@ -114,6 +114,7 @@ export default function CreateCampaign(){
         toast.error(errorData.error || "Une erreur est survenue", {id: toastId, duration: 5000, description: "Veuillez vérifier vos informations et réessayer."});
         return;
       }
+      const {campaignId} = await result.json();
       //const response = await result.json(); // contient l'id de la campagne créée
         toast.success("Votre campagne a été créée avec succès", {id: toastId})
         setCampaign({
@@ -125,7 +126,7 @@ export default function CreateCampaign(){
           allow_overflow: false,
           end_date: "",
         })
-        router.refresh()
+        router.push(`/campaigns/${campaignId}`) // Redirection vers la page de la campagne créée
         // todo redirect to the campaign page
     } catch (e) {
         toast.error("Une erreur est survenue lors de la création de votre campagne", {id: toastId})

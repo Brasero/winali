@@ -2,11 +2,11 @@ import Image from "next/image";
 import {Progress} from "@/components/ui/progress";
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button";
-import {getBuyerSectionCampaigns} from "@/lib/db";
+import {getCampaigns} from "@/lib/db";
 
 
 export default async function  AllSales(){
-  const rows = await getBuyerSectionCampaigns()
+  const rows = await getCampaigns()
   const activeItems = rows.map((row) => ({
     id: row.id,
     title: row.title,
@@ -19,7 +19,7 @@ export default async function  AllSales(){
   }));
 
   return(
-    <div className="flex flex-col gap-3 mb-4 mx-5">
+    <div className="flex flex-col gap-3 mb-8 mt-8 mx-auto container">
       <h3 className="text-2xl font-bold mb-4">Toutes les ventes en cours</h3>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

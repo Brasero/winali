@@ -8,7 +8,6 @@ export default async function Buyer({params}:{params:Promise<{id:string}>}){
   const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/campaigns?id=${id}`)
   const campaign = (await data.json()).data
   const pourcent = Math.round((campaign.ticket_sells / campaign.min_tickets) * 100)
-  console.log(campaign)
 return(
   <div className={"w-full p-5"}>
     <div className={"flex flex-col lg:flex-row justify-center align-center lg:align-start"}>

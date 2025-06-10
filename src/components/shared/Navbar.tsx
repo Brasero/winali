@@ -29,7 +29,7 @@ const Navbar = async () => {
                         <Link href="#comment-ca-marche" className="text-gray-600 hover:text-brand-purple transition-colors font-medium">
                             Comment ça marche
                         </Link>
-                        <Link href="#ventes-actives" className="text-gray-600 hover:text-brand-purple transition-colors font-medium">
+                        <Link href="/campaigns" className="text-gray-600 hover:text-brand-purple transition-colors font-medium">
                             Ventes actives
                         </Link>
                         <Link href="#gagnants" className="text-gray-600 hover:text-brand-purple transition-colors font-medium">
