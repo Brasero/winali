@@ -9,7 +9,7 @@ import {signInSchema} from "@/lib/zod";
 import {ZodErrors} from "@/components/utils/ZodErrors";
 import {toast} from "sonner";
 
-type FieldName = "email" | "first_name" | "last_name" | "birth_date" | "password" | "password_confirm";
+type FieldName = "email" | "first_name" | "last_name" | "birth_date" | "password" | "password_confirm" | "terms";
 type ErrorFields = {
     [key in FieldName]?: {
         _errors: string[] | string;
@@ -22,7 +22,8 @@ const initialUserState = {
   last_name: "",
   birth_date: "",
   password: "",
-  password_confirm: ""
+  password_confirm: "",
+  terms: false
 }
 export default function SignUp(){
   const [user, setUser] = useState(initialUserState);
@@ -32,10 +33,12 @@ export default function SignUp(){
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value} = e.target;
     const name: FieldName = e.target.name as FieldName;
-    setUser(prev => ({...prev, [name]: value}));
+    setUser(prev => ({...prev, [name]: name === "terms" ? !user.terms : value}));
+    // Clear the error for the specific field when it changes
+    setErrors(prev => ({...prev, [name]: undefined}));
 
     // Validate the input on change
-    const result = signInSchema.safeParse({...user, [name]: value});
+    const result = signInSchema.safeParse({...user, [name]: name === 'terms' ? !user.terms : value});
     // If validation fails, set the error for the specific field
     if (!result.success) {
       const formatted = result.error.format();
@@ -174,6 +177,11 @@ export default function SignUp(){
               required
             />
             <ZodErrors error={errors?.password_confirm?._errors} />
+            <div className={"flex items-center mb-5 justify-start"}>
+              <Input type={"checkbox"} checked={user.terms} onChange={handleChange} id={"terms"} name={"terms"} className={"flex-1 m-0 inline h-5 shadow-none"} required />
+              <Label htmlFor={"terms"} className={"flex-4"}>J&apos;accepte les <Link className={"text-primary text-underline"} href={"/terms"}>conditions générales d&apos;utilisation</Link></Label>
+            </div>
+            <ZodErrors error={errors?.terms?._errors} />
             <Button type={"submit"} disabled={isLoading} className={"w-full"}>S&apos;inscrire</Button>
           </CardContent>
           <CardFooter className={"justify-center"}>
