@@ -4,7 +4,7 @@ import {useState, useEffect, useTransition} from "react";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {toast} from "sonner";
-import {useRouter} from "next/navigation";
+import {loadStripe} from "@stripe/stripe-js";
 
 interface QuantitySelectorProps {
   initial?: number;
@@ -15,6 +15,8 @@ interface QuantitySelectorProps {
   allow_overflow:boolean;
 }
 
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
 export default function QuantitySelector({
    soldTickets,
    minTickets,
@@ -23,7 +25,6 @@ export default function QuantitySelector({
   allow_overflow,
  }: QuantitySelectorProps) {
   const [quantity, setQuantity] = useState(1);
-  const router = useRouter()
 
   const max = allow_overflow? null : Math.max(minTickets - soldTickets, 0); // Pour éviter un max négatif
   const [isLoading, startTransition] = useTransition();
@@ -33,7 +34,7 @@ export default function QuantitySelector({
       const toastId = toast.loading('Achat de tickets en cours')
       let res ;
       try {
-        res = await fetch(`${process.env.NEXT_PUBLIC_API_URL }/campaigns/${campaignId}/tickets`, {
+        res = await fetch(`${process.env.NEXT_PUBLIC_API_URL }/auth/campaigns/${campaignId}/tickets`, {
           method:"POST",
           headers:{
             "Content-Type": "application/json",
@@ -48,10 +49,18 @@ export default function QuantitySelector({
           })
           return
         }
-        toast.success('Achat de tickets réussie', {
-          id:toastId,
+        const {url} = await res.json();
+        const stripe = await stripePromise;
+        stripe!.redirectToCheckout({sessionId: new URL(url).pathname.split("/").pop()}).then((res) => {
+            if (res.error) {
+                toast.error(res.error.message, {
+                id: toastId,
+                });
+            }
+            toast.success('Redirection vers le paiement', {
+                id: toastId,
+                });
         })
-        router.refresh()
       }
       catch (e){
         toast.error('Une erreur est survenue lors de votre achat.', {

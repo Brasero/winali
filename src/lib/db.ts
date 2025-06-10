@@ -12,10 +12,31 @@ export async function query<T = Record<string, unknown>[]>(
     return data as T;
 }
 
+
+export interface Campaign {
+    id: string;
+    title: string;
+    ticket_price: number;
+    min_tickets: number;
+    ticket_sells: number;
+    is_closed: boolean;
+    created_at: string;
+    collected: number;
+    seller_id: string;
+    allow_overflow: boolean;
+    tickets: [];
+    image_urls?: string[];
+    description: string;
+    user?: {
+        last_name: unknown;
+        first_name: unknown;
+    }
+}
+
 export const getCampaignsById = async (campaignId:string) => {
-    const rows = await query(`
+    const rows = await query<Campaign[]>(`
     SELECT 
-    id,seller_id,title,description,image_urls,ticket_price,min_tickets,end_date,is_closed,created_at
+    id,seller_id,title,description,image_urls,ticket_price,min_tickets,end_date,is_closed,created_at, allow_overflow
     FROM campaigns
     WHERE id=$1
     `,[campaignId])
@@ -32,23 +53,6 @@ export const getTicketByCampaignId = async (campaignId:string) => {
     return rows
 }
 
-export interface Campaign {
-    id: string;
-    title: string;
-    ticket_price: number;
-    min_tickets: number;
-    ticket_sells: number;
-    is_closed: boolean;
-    created_at: string;
-    collected: number;
-    seller_id: string;
-    allow_overflow: boolean;
-    tickets: [];
-    user?: {
-        last_name: unknown;
-        first_name: unknown;
-    }
-}
 export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promise<Campaign[]> => {
     const rows = await query<Campaign[]>(`
     SELECT
@@ -119,7 +123,28 @@ export const getBuyerSectionCampaigns = async () => {
         ORDER BY c.created_at DESC
         LIMIT 3
     `)
+}
 
+export const getCampaigns = async () => {
+    return await query<BuyerSectionCampaign[]>(`
+    SELECT 
+        c.id, 
+        c.created_at, 
+        c.end_date, 
+        c.description, 
+        c.min_tickets AS total_tickets, 
+        c.title, 
+        c.ticket_price AS ticket_price, 
+        c.is_closed, 
+        c.image_urls,
+        count(t.id) AS tickets_sold
+        FROM campaigns c
+        LEFT JOIN tickets t 
+        ON t.campaign_id = c.id
+        WHERE c.is_closed = false
+        GROUP BY c.id
+        ORDER BY tickets_sold DESC
+    `)
 }
 export const getCampaignAndTicketDetailBySellerId = async (sellerId: string) => {
     return await query<Campaign[]>(`

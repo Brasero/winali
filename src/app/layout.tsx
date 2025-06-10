@@ -11,7 +11,7 @@ const inter = Inter({subsets: ["latin"]})
 
 
 export const metadata: Metadata = {
-  title: "PartyChance - Vendez vos biens autrement",
+  title: "Winali - Vendez vos biens autrement",
   description: "Créez une campagne, vendez par tickets, tirez au sort un gagnant sur PartiChance",
 };
 
@@ -27,7 +27,7 @@ export default function RootLayout({
         <title>PartyChance - Vendez vos biens autrement</title>
         <meta name="description"
               content="Créez une campagne, vendez par tickets, tirez au sort un gagnant sur PartiChance"/>
-        <meta name="author" content="PartiChance"/>
+        <meta name="author" content="Winali"/>
     </head>
     <body
         className={`${inter.className} antialiased`}

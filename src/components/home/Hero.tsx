@@ -1,4 +1,4 @@
-import {Button, buttonVariants} from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import Link from "next/link";
@@ -26,7 +26,7 @@ const Hero = async () => {
                                 Créer une vente
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </Link>
-                            <Link href={"#"} className={`${buttonVariants({variant: "secondary_outline"})} border-secondary text-secondary hover:bg-secondary/10 font-semibold px-6 py-6 h-auto text-xl`}>
+                            <Link href={"/campaigns"} className={`${buttonVariants({variant: "secondary_outline"})} border-secondary text-secondary hover:bg-secondary/10 font-semibold px-6 py-6 h-auto text-xl`}>
                                 Participer à un tirage
                             </Link>
                         </div>
@@ -97,9 +97,9 @@ const Hero = async () => {
                                                 <p className="text-sm text-gray-500">Tickets restants</p>
                                                 <p className="font-semibold">{heroCampaign.totalTickets - heroCampaign.ticketsSold} / {heroCampaign.totalTickets}</p>
                                             </div>
-                                            <Button className="bg-brand-coral hover:bg-brand-coral/90 text-white">
+                                            <Link href={`/campaigns/${heroCampaign.id}`} className={`${buttonVariants({variant: "secondary"})} hover:bg-brand-coral/90 text-white`}>
                                                 Acheter un ticket
-                                            </Button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
