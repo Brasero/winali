@@ -80,7 +80,6 @@ export async function GET(req:NextRequest){
     if(userRows.length === 0){
         return NextResponse.json({error:"Seller not found"},{status:400})
     }
-    console.log(campaign)
     campaign.user = {
         last_name:userRows[0].last_name,
         first_name:userRows[0].first_name

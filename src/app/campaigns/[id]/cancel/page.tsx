@@ -3,9 +3,15 @@ import { Button } from '@/components/ui/button';
 import { XCircle, Home, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
-const PaymentError = ({params}: { params: {id: string}}) => {
+type TPaymentErrorProps = {
+    params: Promise<{
+        id: string;
+    }>
+}
+
+const PaymentError = async ({params}: TPaymentErrorProps) => {
     // retrieve the id in URL server side
-    const { id } = params;
+    const { id } = await params;
     const backLink = `/campaigns/${id}`;
 
     return (
