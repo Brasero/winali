@@ -51,7 +51,7 @@ export default function QuantitySelector({
         }
         const {url} = await res.json();
         const stripe = await stripePromise;
-        stripe!.redirectToCheckout({sessionId: new URL(url).pathname.split("/").pop()}).then((res) => {
+        stripe!.redirectToCheckout({sessionId: new URL(url).pathname.split("/").pop()!}).then((res) => {
             if (res.error) {
                 toast.error(res.error.message, {
                 id: toastId,
