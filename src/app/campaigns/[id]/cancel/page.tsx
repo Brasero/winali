@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { XCircle, Home, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
-const PaymentError = ({params}) => {
+const PaymentError = ({params}: { params: {id: string}}) => {
     // retrieve the id in URL server side
     const { id } = params;
     const backLink = `/campaigns/${id}`;
