@@ -56,9 +56,9 @@ export async function POST(req: NextRequest) {
             VALUES ($1, $2, $3, $4, $5, $6, FALSE, FALSE)
         `, [email, hashedPassword, first_name, last_name, birth_date, validateToken]);
 
-        await sendVerificationMail(email, ValidateEmailTemplate({verifyUrl: validateURL}))
+        await sendVerificationMail(email, ValidateEmailTemplate({verifyUrl: validateURL}), "Vérification de votre compte Winali");
 
-        return new Response(JSON.stringify({message: "Inscription réussie."}), {status: 201});
+        return new Response(JSON.stringify({message: "Inscription réussie. Un e-mail de confirmation va vous être envoyé"}), {status: 201});
     } catch (error) {
         console.error("Erreur lors de l'inscription:", error);
         return new Response(JSON.stringify({error: "Erreur lors de l'inscription"}), {status: 500});
