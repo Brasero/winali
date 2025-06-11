@@ -55,9 +55,9 @@ export async function POST(request: NextRequest) {
 
         const verificationLink = `${process.env.NEXT_PUBLIC_APP_URL}/api/verify?token=${token}`
 
-        await sendVerificationMail(email, ValidateEmailTemplatePreLunch({verifyUrl: verificationLink}))
+        await sendVerificationMail(email, ValidateEmailTemplatePreLunch({verifyUrl: verificationLink}), "Confirmation d’inscription au pré-lancement de Winali");
 
-        return NextResponse.json({message: "E-mail enregistré"})
+        return NextResponse.json({message: "E-mail enregistré, un e-mail de confirmation vous a été envoyé."}, {status: 200});
     } catch(err) {
         console.error("Subscribe Error: ", err);
         return NextResponse.json({ error: "Erreur de server" }, {status: 500})

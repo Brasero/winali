@@ -4,17 +4,64 @@ interface EmailTemplateProps {
 	verifyUrl: string;
 }
 export const ValidateEmailTemplatePreLunch = ({verifyUrl}: EmailTemplateProps) => {
-	return (<div style={{
-		fontFamily: "sans-serif",
-		lineHeight: 1.5,
-		color: "#333"
-	}}>
-		<h1>Bienvenue sur PartyChance ! </h1>
-		<p>
-			Nous vous remercions de vous intéresser à nous, pour confirmer votre adresse e-mail, cliquez sur ce lien :<br/>
-			<a href={verifyUrl} style={{display: "block"}}>Confirmer mon inscription</a>
-		</p>
-		<p>Si vous n&apos;avez pas demandé cette e-mail, ignorez-le simplement.</p>
+	return (<div style={{fontFamily: "Arial, sans-serif", backgroundColor: "#f9f9fb", padding: "20px"}}>
+		<div
+			style={{
+				maxWidth: "580px",
+				margin: "auto",
+				backgroundColor: "#ffffff",
+				borderRadius: "8px",
+				padding: "30px",
+				boxShadow: "0 5px 15px rgba(0, 0, 0, 0.05)",
+			}}
+		>
+			<h1 style={{color: "#6366f1"}}>Bienvenue dans l’aventure Winali 🥳</h1>
+
+			<p>Bonjour,</p>
+
+			<p>
+				Merci d’avoir rejoint <strong>Winali</strong>, la toute première plateforme où vous pouvez
+				acheter ou vendre des biens sous forme de tickets 🎟️.
+			</p>
+
+			<p>
+				En vous inscrivant dès maintenant, vous obtenez le statut <strong>de membre privilégié</strong> :
+			</p>
+
+			<ul>
+				<li>🔐 Accès anticipé à la plateforme</li>
+				<li>🌟 Participation à une campagne VIP réservée aux bêta-testeurs</li>
+			</ul>
+
+			<p>
+				Avant tout, merci de confirmer votre adresse e-mail pour finaliser votre inscription 👇
+			</p>
+
+			<a
+				href={verifyUrl}
+				style={{
+					display: "inline-block",
+					marginTop: "20px",
+					padding: "12px 24px",
+					background: "linear-gradient(to right, #6366f1, #f97066)",
+					color: "white",
+					textDecoration: "none",
+					borderRadius: "6px",
+					fontWeight: "bold",
+				}}
+			>
+				✅ Confirmer mon adresse e-mail
+			</a>
+
+			<p style={{marginTop: "20px"}}>
+				Si vous n’avez pas demandé à vous inscrire, vous pouvez ignorer cet e-mail.
+			</p>
+
+			<p style={{fontSize: "12px", color: "#888", marginTop: "30px", textAlign: "center"}}>
+				Vous recevez cet e-mail car vous avez demandé à être informé(e) du lancement de Winali. <br/>
+				Pas de spam, promis 🤞
+			</p>
+		</div>
 	</div>)
 }
 
@@ -60,7 +107,7 @@ export const ValidateEmailTemplate = ({verifyUrl}: EmailTemplateProps) => {
 									textAlign: 'center',
 								}}
 							>
-								<h1 style={{margin: 0, fontSize: '24px', lineHeight: '32px'}}>Bienvenue sur PartiChance
+								<h1 style={{margin: 0, fontSize: '24px', lineHeight: '32px'}}>Bienvenue sur Winali
 									!</h1>
 							</td>
 						</tr>
@@ -78,7 +125,7 @@ export const ValidateEmailTemplate = ({verifyUrl}: EmailTemplateProps) => {
 									Bonjour,
 								</p>
 								<p style={{fontSize: '16px', lineHeight: '24px', margin: '16px 0', color: '#4b5563'}}>
-									Vous avez récemment demandé à vous inscrire sur <strong>PartiChance</strong>. Pour
+									Vous avez récemment demandé à vous inscrire sur <strong>Winali</strong>. Pour
 									finaliser votre inscription et confirmer votre adresse
 									e-mail, cliquez sur le bouton ci-dessous :
 								</p>
@@ -139,7 +186,7 @@ export const ValidateEmailTemplate = ({verifyUrl}: EmailTemplateProps) => {
 									lineHeight: '24px',
 									margin: '16px 0',
 									color: '#4b5563'
-								}}>L’équipe PartiChance</p>
+								}}>L’équipe Winali</p>
 							</td>
 						</tr>
 
@@ -156,10 +203,10 @@ export const ValidateEmailTemplate = ({verifyUrl}: EmailTemplateProps) => {
 								}}
 							>
 								<p style={{margin: '4px 0'}}>
-									PartiChance &bull; Plateforme de vente par tickets de loterie
+									Winali &bull; Plateforme de vente par tickets de loterie
 								</p>
 								<p style={{margin: '4px 0'}}>123 Rue des Chances, 75000 Paris, France</p>
-								<p style={{margin: '4px 0'}}>© 2025 PartiChance. Tous droits réservés.</p>
+								<p style={{margin: '4px 0'}}>© 2025 Winali. Tous droits réservés.</p>
 							</td>
 						</tr>
 						</tbody>
