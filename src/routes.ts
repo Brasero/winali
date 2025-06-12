@@ -9,6 +9,6 @@ export const privateRoute: string[] = [
 export const authRoute: string[] = [
     "/authentification/login",
     "/authentification/signup",
-    "/authentification/forgot-password",
-    "/authentification/reset-password"
+    "/authentification/reset-password",
+    "/authentification/new-password"
 ]
