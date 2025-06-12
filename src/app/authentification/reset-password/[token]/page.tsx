@@ -83,7 +83,7 @@ export default async function ResetPasswordPage({ params, searchParams }: {
                 if (result.success) {
                   redirect(`${process.env.NEXT_PUBLIC_APP_URL}/authentification/reset-password/${token}?success=1`);
                 } else {
-                  redirect(`${process.env.NEXT_PUBLIC_APP_URL}/authentification/reset-password/${token}?error=${encodeURIComponent(result.error)}`);
+                  redirect(`${process.env.NEXT_PUBLIC_APP_URL}/authentification/reset-password/${token}?error=${encodeURIComponent(result.error!)}`);
                 }
               }} className="space-y-4">
                 <div>
