@@ -35,7 +35,7 @@ export interface Campaign {
 
 export const getCampaignsById = async (campaignId:string) => {
     const rows = await query<Campaign[]>(`
-    SELECT 
+    SELECT
     id,seller_id,title,description,image_urls,ticket_price,min_tickets,end_date,is_closed,created_at, allow_overflow
     FROM campaigns
     WHERE id=$1
@@ -59,7 +59,7 @@ export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promi
     c.id,c.seller_id,c.title,c.description,c.image_urls,c.ticket_price,c.min_tickets,c.end_date,c.is_closed,c.created_at,c.allow_overflow,
     COALESCE(
       json_agg(t.*) FILTER (WHERE t.id IS NOT NULL),
-        '[]'    
+        '[]'
     ) AS tickets,
     count(t.id) AS ticket_sells
     FROM campaigns c
@@ -78,7 +78,7 @@ export interface HeroCampaign extends Campaign {
 
 export const getHeroCampaign = async () => {
     return await query<HeroCampaign[]>(`
-        SELECT 
+        SELECT
         c.id, c.created_at, c.end_date, c.description, c.min_tickets, c.title, c.ticket_price, c.is_closed, c.image_urls,
         COALESCE(
             json_agg(t.*) FILTER ( WHERE t.id IS NOT NULL),
@@ -86,7 +86,7 @@ export const getHeroCampaign = async () => {
         ) AS tickets,
         count(t.id) AS ticket_sells
         FROM campaigns c
-        LEFT JOIN tickets t 
+        LEFT JOIN tickets t
         ON t.campaign_id = c.id
         WHERE c.is_closed = false
         GROUP BY c.created_at, c.id
@@ -104,19 +104,19 @@ export type BuyerSectionCampaign = Omit<HeroCampaign, "tickets" | "ticket_sells"
 
 export const getBuyerSectionCampaigns = async () => {
     return await query<BuyerSectionCampaign[]>(`
-        SELECT 
-        c.id, 
-        c.created_at, 
-        c.end_date, 
-        c.description, 
-        c.min_tickets AS total_tickets, 
-        c.title, 
-        c.ticket_price AS ticket_price, 
-        c.is_closed, 
+        SELECT
+        c.id,
+        c.created_at,
+        c.end_date,
+        c.description,
+        c.min_tickets AS total_tickets,
+        c.title,
+        c.ticket_price AS ticket_price,
+        c.is_closed,
         c.image_urls,
         count(t.id) AS tickets_sold
         FROM campaigns c
-        LEFT JOIN tickets t 
+        LEFT JOIN tickets t
         ON t.campaign_id = c.id
         WHERE c.is_closed = false
         GROUP BY c.id, c.created_at
@@ -127,19 +127,19 @@ export const getBuyerSectionCampaigns = async () => {
 
 export const getCampaigns = async () => {
     return await query<BuyerSectionCampaign[]>(`
-    SELECT 
-        c.id, 
-        c.created_at, 
-        c.end_date, 
-        c.description, 
-        c.min_tickets AS total_tickets, 
-        c.title, 
-        c.ticket_price AS ticket_price, 
-        c.is_closed, 
+    SELECT
+        c.id,
+        c.created_at,
+        c.end_date,
+        c.description,
+        c.min_tickets AS total_tickets,
+        c.title,
+        c.ticket_price AS ticket_price,
+        c.is_closed,
         c.image_urls,
         count(t.id) AS tickets_sold
         FROM campaigns c
-        LEFT JOIN tickets t 
+        LEFT JOIN tickets t
         ON t.campaign_id = c.id
         WHERE c.is_closed = false
         GROUP BY c.id
@@ -148,7 +148,7 @@ export const getCampaigns = async () => {
 }
 export const getCampaignAndTicketDetailBySellerId = async (sellerId: string) => {
     return await query<Campaign[]>(`
-        SELECT 
+        SELECT
         c.id, c.created_at, c.end_date, c.description, c.description, c.min_tickets, c.title, c.ticket_price, c.is_closed,
         COALESCE(
             json_agg(t.*) FILTER ( WHERE t.id IS NOT NULL),
@@ -156,7 +156,7 @@ export const getCampaignAndTicketDetailBySellerId = async (sellerId: string) => 
         ) AS tickets,
         count(t.id) AS ticket_sells
         FROM campaigns c
-        LEFT JOIN tickets t 
+        LEFT JOIN tickets t
         ON t.campaign_id = c.id
         WHERE c.seller_id = $1
         GROUP BY c.id
@@ -181,7 +181,7 @@ export type TSafeUser = Omit<TUser, "password_hash" | "validation_token">
 
 export const getUserById = async (userId:string) => {
     const rows = await query<TSafeUser[]>(`
-        SELECT 
+        SELECT
         id,
         first_name,
         last_name,
@@ -196,6 +196,23 @@ export const getUserById = async (userId:string) => {
     return rows
 }
 
+export const getUserByEmail = async (email: string) => {
+    const rows = await query<TSafeUser[]>(`
+        SELECT
+        id,
+        first_name,
+        last_name,
+        email,
+        is_email_verified,
+        is_seller,
+        created_at,
+        birth_date,
+        updated_at
+        FROM users WHERE email= $1
+    `,[email])
+    return rows
+}
+
 export interface IWinner {
     first_name: string;
     last_name: string;
@@ -206,7 +223,7 @@ export interface IWinner {
 }
 export const getTwoLastWinner = async () => {
     return await query<IWinner[]>(`
-        SELECT 
+        SELECT
         u.first_name,
         u.last_name,
         c.title AS item,

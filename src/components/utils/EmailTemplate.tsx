@@ -219,3 +219,57 @@ export const ValidateEmailTemplate = ({verifyUrl}: EmailTemplateProps) => {
 		</html>
 	)
 }
+
+export const resetPasswordEmail = ({verifyUrl}: EmailTemplateProps) => {
+	return (
+		<div style={{fontFamily: "Arial, sans-serif", backgroundColor: "#f9f9fb", padding: "20px"}}>
+			<div
+				style={{
+					maxWidth: "580px",
+					margin: "auto",
+					backgroundColor: "#ffffff",
+					borderRadius: "8px",
+					padding: "30px",
+					boxShadow: "0 5px 15px rgba(0, 0, 0, 0.05)",
+				}}
+			>
+				<h1 style={{color: "#6366f1"}}>Réinitialisez votre mot de passe 🔒</h1>
+				
+				<p>Bonjour,</p>
+				
+				<p>
+					Vous avez demandé à réinitialiser votre mot de passe sur <strong>Winali</strong>.
+				</p>
+				
+				<p>
+					Pour choisir un nouveau mot de passe, cliquez sur le bouton ci-dessous :
+				</p>
+				
+				<a
+					href={verifyUrl}
+					style={{
+						display: "inline-block",
+						marginTop: "20px",
+						padding: "12px 24px",
+						background: "linear-gradient(to right, #6366f1, #f97066)",
+						color: "white",
+						textDecoration: "none",
+						borderRadius: "6px",
+						fontWeight: "bold",
+					}}
+				>
+					Réinitialiser mon mot de passe
+				</a>
+				
+				<p style={{marginTop: "20px"}}>
+					Ce lien expirera dans 1 heure pour des raisons de sécurité.
+					Si vous n’avez pas fait cette demande, vous pouvez ignorer cet e-mail.
+				</p>
+				
+				<p style={{fontSize: "12px", color: "#888", marginTop: "30px", textAlign: "center"}}>
+					© Winali – Plateforme de ventes ludiques par tickets 🎟️
+				</p>
+			</div>
+		</div>
+	)
+}

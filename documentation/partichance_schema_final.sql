@@ -4,21 +4,23 @@ CREATE TYPE transaction_type AS ENUM ('payment', 'refund', 'payout');
 -- Table USERS
 CREATE TABLE IF NOT EXISTS users
 (
-    id                UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
-    email             VARCHAR(255)             NOT NULL UNIQUE,
-    password_hash     VARCHAR(255)             NOT NULL,
-    is_email_verified BOOLEAN                  NOT NULL DEFAULT FALSE,
-    first_name        VARCHAR(255)             NOT NULL,
-    last_name         VARCHAR(255)             NOT NULL,
-    birth_date        TIMESTAMP WITH TIME ZONE NOT NULL,
-    is_seller         BOOLEAN                  NOT NULL DEFAULT FALSE,
-    validation_token  VARCHAR(255)             NULL,
-    created_at        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    updated_at        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    id                 UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
+    email              VARCHAR(255)             NOT NULL UNIQUE,
+    password_hash      VARCHAR(255)             NOT NULL,
+    is_email_verified  BOOLEAN                  NOT NULL DEFAULT FALSE,
+    first_name         VARCHAR(255)             NOT NULL,
+    last_name          VARCHAR(255)             NOT NULL,
+    birth_date         TIMESTAMP WITH TIME ZONE NOT NULL,
+    is_seller          BOOLEAN                  NOT NULL DEFAULT FALSE,
+    validation_token   VARCHAR(255)             NULL,
+    is_beta            BOOLEAN                  NOT NULL DEFAULT FALSE,
+    free_ticket_credit INT                      NOT NULL DEFAULT 0,
+    created_at         TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at         TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
 -- Table CAMPAIGNS
-CREATE TABLE IF NOT EXISTS data
+CREATE TABLE IF NOT EXISTS campaigns
 (
     id             UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
     seller_id      UUID                     NOT NULL REFERENCES users (id) ON DELETE CASCADE,
@@ -30,6 +32,9 @@ CREATE TABLE IF NOT EXISTS data
     allow_overflow BOOLEAN                  NOT NULL DEFAULT FALSE,
     end_date       TIMESTAMP WITH TIME ZONE NOT NULL,
     is_closed      BOOLEAN                  NOT NULL DEFAULT FALSE,
+    is_beta_only   BOOLEAN                  NOT NULL DEFAULT FALSE,
+    is_drawn       BOOLEAN                  NOT NULL DEFAULT FALSE,
+    delivered      BOOLEAN                  NOT NULL DEFAULT FALSE,
     created_at     TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at     TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
@@ -38,8 +43,9 @@ CREATE TABLE IF NOT EXISTS data
 CREATE TABLE IF NOT EXISTS tickets
 (
     id           UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
-    campaign_id  UUID                     NOT NULL REFERENCES data (id) ON DELETE CASCADE,
+    campaign_id  UUID                     NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE,
     buyer_id     UUID                     NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    is_winner    BOOLEAN                  NOT NULL DEFAULT FALSE,
     amount_paid  NUMERIC(10, 2)           NOT NULL CHECK (amount_paid >= 0),
     purchased_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
@@ -48,7 +54,7 @@ CREATE TABLE IF NOT EXISTS tickets
 CREATE TABLE IF NOT EXISTS draws
 (
     id                UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
-    campaign_id       UUID                     NOT NULL REFERENCES data (id) ON DELETE CASCADE,
+    campaign_id       UUID                     NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE,
     winning_ticket_id UUID                     REFERENCES tickets (id) ON DELETE SET NULL,
     drawn_at          TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     succeeded         BOOLEAN                  NOT NULL
@@ -58,13 +64,14 @@ CREATE TABLE IF NOT EXISTS draws
 CREATE TABLE IF NOT EXISTS stripe_transactions
 (
     id                UUID PRIMARY KEY                  DEFAULT gen_random_uuid(),
-    campaign_id       UUID                     NOT NULL REFERENCES data (id) ON DELETE CASCADE,
+    campaign_id       UUID                     NOT NULL REFERENCES campaigns (id) ON DELETE CASCADE,
     user_id           UUID                     NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     stripe_charge_id  VARCHAR(255)             NOT NULL,
     type              transaction_type         NOT NULL,
     amount            NUMERIC(10, 2)           NOT NULL CHECK (amount >= 0),
     commission_amount NUMERIC(10, 2)           NOT NULL DEFAULT 0,
     net_amount        NUMERIC(10, 2)           NOT NULL DEFAULT 0,
+    paid_out          BOOLEAN                  NOT NULL DEFAULT FALSE,
     created_at        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
@@ -82,5 +89,7 @@ CREATE TABLE IF NOT EXISTS subscribers
     email              TEXT      NOT NULL UNIQUE,
     is_verified        BOOLEAN   NOT NULL DEFAULT FALSE,
     verification_token TEXT,
+    referrer_id        UUID      REFERENCES users (id) ON DELETE SET NULL,
+    referrer_token     TEXT,
     created_at         TIMESTAMP NOT NULL DEFAULT NOW()
 );

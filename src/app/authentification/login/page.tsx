@@ -93,7 +93,7 @@ export default function LogIn(){
               className={"flex-1 h-12 bg-background mb-5"}
               required
             />
-            <ZodErrors error={errors?.email?._errors} />
+            <ZodErrors error={errors?.email?._errors}/>
             <Label htmlFor={"password"} className={"mb-2"}>Mot de passe</Label>
             <Input
               type={'password'}
@@ -105,11 +105,16 @@ export default function LogIn(){
               className={"flex-1 h-12 bg-background mb-5"}
               required
             />
-            <ZodErrors error={errors?.password?._errors} />
+            <ZodErrors error={errors?.password?._errors}/>
             <Button type={"submit"} disabled={isLoading} className={"w-full"}>Se connecter</Button>
+            <div className={"w-full flex justify-end mt-5"}>
+              <Link href={"/authentification/reset-password"} className={"text-primary text-sm text-underline mb-2"}>Mot
+                de passe oublié ?</Link>
+            </div>
           </CardContent>
           <CardFooter className={"justify-center"}>
-            <p>Pas encore de compte ? <Link className={"text-primary text-underline"} href={"/authentification/signup"}> Créer un compte</Link> </p>
+            <p>Pas encore de compte ? <Link className={"text-primary text-underline"}
+                                            href={"/authentification/signup"}> Créer un compte</Link></p>
           </CardFooter>
         </Card>
       </form>
