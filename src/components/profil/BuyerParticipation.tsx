@@ -12,39 +12,10 @@ interface Participation {
     purchaseDate: string;
     drawResult: 'won' | 'lost' | 'pending';
     totalSpent: number;
+    is_free: boolean;
 }
 
-const BuyerParticipation = () => {
-    // Données d'exemple - à remplacer par des données réelles
-    const participations: Participation[] = [
-        {
-            id: '1',
-            campaignTitle: 'Concert Jazz Festival 2024',
-            campaignId: 'camp_1',
-            ticketsPurchased: 3,
-            purchaseDate: '2024-01-20',
-            drawResult: 'pending',
-            totalSpent: 45
-        },
-        {
-            id: '2',
-            campaignTitle: 'Match PSG vs OM',
-            campaignId: 'camp_2',
-            ticketsPurchased: 1,
-            purchaseDate: '2024-01-15',
-            drawResult: 'lost',
-            totalSpent: 25
-        },
-        {
-            id: '3',
-            campaignTitle: 'Théâtre - Hamlet',
-            campaignId: 'camp_3',
-            ticketsPurchased: 2,
-            purchaseDate: '2024-01-10',
-            drawResult: 'won',
-            totalSpent: 30
-        }
-    ];
+const BuyerParticipation = ({participations}) => {
 
     const getResultBadge = (result: Participation['drawResult']) => {
         const variants = {
@@ -85,7 +56,7 @@ const BuyerParticipation = () => {
                                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                                             <div className="flex items-center gap-2">
                                                 <Ticket className="w-4 h-4 text-gray-500" />
-                                                <span>{participation.ticketsPurchased} ticket{participation.ticketsPurchased > 1 ? 's' : ''} acheté{participation.ticketsPurchased > 1 ? 's' : ''}</span>
+                                                <span>{participation.ticketsPurchased} ticket{participation.ticketsPurchased > 1 ? 's' : ''} {participation.is_free ? "offert": "acheté"}{participation.ticketsPurchased > 1 ? 's' : ''}</span>
                                             </div>
 
                                             <div className="flex items-center gap-2">
