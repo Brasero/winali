@@ -4,7 +4,7 @@ import {sendVerificationMail} from "@/lib/mail";
 import {resetPasswordEmail} from "@/components/utils/EmailTemplate";
 
 export async function POST(req: NextRequest) {
-    let body: unknown;
+    let body: FormData;
     try {
         body = await req.formData();
     } catch {
