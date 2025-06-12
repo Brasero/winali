@@ -21,7 +21,7 @@ const Hero = async () => {
                             Créez une campagne, vendez par tickets, tirez au sort un gagnant.
                             Un nouveau moyen équitable de vendre vos objets de valeur.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col xl:flex-row gap-4">
                             <Link href={"/user/campaign"} className={`${buttonVariants()} hover:bg-brand-purple/90 text-white font-semibold px-6 py-6 h-auto text-xl`}>
                                 Créer une vente
                                 <ArrowRight className="ml-2 h-5 w-5" />
