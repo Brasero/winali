@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({error: "Email invalide"}, {status: 400});
     }
     const {email} = parseResult.data;
+    const ref = body.ref || null
     const token = crypto.randomUUID();
 
     try {
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
             [email, token]
         );
 
-        const verificationLink = `${process.env.NEXT_PUBLIC_APP_URL}/api/verify?token=${token}`
+        const verificationLink = `${process.env.NEXT_PUBLIC_APP_URL}/api/verify?token=${token}${ref ? `&ref=${ref}` : ""}`;
 
         await sendVerificationMail(email, ValidateEmailTemplatePreLunch({verifyUrl: verificationLink}), "Confirmation d’inscription au pré-lancement de Winali");
 
