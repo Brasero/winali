@@ -69,7 +69,7 @@ export default function LogIn(){
     if (result?.ok) {
         toast.success("Connexion réussie", { id: toastId });
         setIsLoading(false);
-        router.push("/user/profil");
+        router.refresh()
         return;
     }
   }
