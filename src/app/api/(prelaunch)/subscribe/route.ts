@@ -22,7 +22,7 @@ const subscribeSchema = z.object({
 
 export async function POST(request: NextRequest) {
     await createTable();
-    let body: unknown;
+    let body: {email: string, ref?: string};
     try {
         body = await request.json();
     } catch {
