@@ -29,6 +29,6 @@ export async function POST(req: NextRequest) {
     await query(`
         UPDATE users SET validation_token = $1, updated_at = NOW() WHERE id = $2
     `, [resetToken, user.id]);
-    await sendVerificationMail(email, resetPasswordEmail({verifyUrl: `${process.env.NEXT_PUBLIC_APP_URL}/authentification/reset-password/${resetToken}`}))
+    await sendVerificationMail(email, resetPasswordEmail({verifyUrl: `${process.env.NEXT_PUBLIC_APP_URL}/authentification/reset-password/${resetToken}`}), "Réinitialisation de votre mot de passe Winali");
     return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/authentification/reset-password?success=true`, {status: 302});
 }
