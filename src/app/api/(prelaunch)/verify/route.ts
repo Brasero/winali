@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
         const subscriber = res[0];
         const referrer_token = crypto.randomUUID();
         const is_referred = searchParams.get("ref");
-        let referrer = null;
+        let referrer: {id: string} | null = null;
         if (is_referred) {
             const referrerRes = await query<{id: string}[]>(
                 "SELECT id FROM subscribers WHERE referrer_token = $1",
