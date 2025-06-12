@@ -4,8 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowRight, Mail, Users, Gift, Clock } from 'lucide-react';
 import {useIsMobile} from "@/hook/useIsMobile";
+import {useSearchParams} from "next/navigation";
 
-const PreLaunchHero = () => {
+const PreLaunchHero =  () => {
+    const searchParams = useSearchParams()
+    const ref = searchParams.get("ref");
     const isMobile = useIsMobile();
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
@@ -45,7 +48,7 @@ const PreLaunchHero = () => {
             const res = await fetch("/api/subscribe", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({email}),
+                body: JSON.stringify({email, ref}),
             });
             const data = await res.json()
             if (!res.ok) {

@@ -65,6 +65,65 @@ export const ValidateEmailTemplatePreLunch = ({verifyUrl}: EmailTemplateProps) =
 	</div>)
 }
 
+export const refferalLinkEmail = ({verifyUrl}: EmailTemplateProps) => {
+	return (
+		<div style={{fontFamily: "Arial, sans-serif", backgroundColor: "#f9f9fb", padding: "20px"}}>
+			<div
+				style={{
+					maxWidth: "580px",
+					margin: "auto",
+					backgroundColor: "#ffffff",
+					borderRadius: "8px",
+					padding: "30px",
+					boxShadow: "0 5px 15px rgba(0, 0, 0, 0.05)",
+				}}
+			>
+				<h1 style={{color: "#6366f1"}}>Bienvenue dans l’aventure Winali 🥳</h1>
+				
+				<p>Bonjour,</p>
+				
+				<p>
+					Merci d’avoir rejoint <strong>Winali</strong>, la toute première plateforme où vous pouvez
+					acheter ou vendre des biens sous forme de tickets 🎟️.
+				</p>
+				
+				<p>
+					En vous inscrivant dès maintenant, vous avez obtenu le statut <strong>de membre privilégié</strong> :
+				</p>
+				
+				<ul>
+					<li>🔐 Accès anticipé à la plateforme</li>
+					<li>🌟 Participation à une campagne VIP réservée aux bêta-testeurs</li>
+				</ul>
+				
+				<p>
+					Vous pouvez nous aidez, partagez le lien ci-dessous avec vos amis et gagnez encore plus d&apos;avantage 👇
+				</p>
+				
+				<div
+					style={{
+						display: "inline-block",
+						marginTop: "20px",
+						padding: "12px 24px",
+						background: "linear-gradient(to right, #6366f1, #f97066)",
+						color: "white",
+						textDecoration: "none",
+						borderRadius: "6px",
+						fontWeight: "bold",
+					}}
+				>
+					{verifyUrl}
+				</div>
+				
+				<p style={{fontSize: "12px", color: "#888", marginTop: "30px", textAlign: "center"}}>
+					Vous recevez cet e-mail car vous avez demandé à être informé(e) du lancement de Winali. <br/>
+					Pas de spam, promis 🤞
+				</p>
+			</div>
+		</div>
+	)
+}
+
 export const ValidateEmailTemplate = ({verifyUrl}: EmailTemplateProps) => {
 	return (
 		<html lang="fr">
@@ -111,7 +170,7 @@ export const ValidateEmailTemplate = ({verifyUrl}: EmailTemplateProps) => {
 									!</h1>
 							</td>
 						</tr>
-
+						
 						{/* Corps de l’email */}
 						<tr>
 							<td
