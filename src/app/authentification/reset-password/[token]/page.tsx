@@ -69,7 +69,7 @@ export default async function ResetPasswordPage({ params, searchParams }: {
                 
                 if (!parse.success) {
                   const firstError = parse.error.errors[0];
-                  redirect(`${process.env.NEXT_PUBLIC_APP_URL}/authentification/reset-password/${token}?error=${encodeURIComponent(firstError.message)}`, "replace");
+                  redirect(`${process.env.NEXT_PUBLIC_APP_URL}/authentification/reset-password/${token}?error=${encodeURIComponent(firstError.message)}`);
                   return
                 }
                 let result: {success: boolean, error?: string};
