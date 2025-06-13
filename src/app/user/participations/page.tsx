@@ -19,7 +19,6 @@ async function BuyerParticipationsPage () {
     cache: 'no-store'
   })
   const data = (await rows.json())
-  console.log(data)
   type Ticket = {
     tickets_id: string;
     total_spent: number;
@@ -43,8 +42,8 @@ async function BuyerParticipationsPage () {
             <div className="container mx-auto px-4 max-w-4xl">
                 <div className="mb-8">
                     <Link href="/user/profil" className={`${buttonVariants({variant: "outline"})} mb-4 flex items-center gap-2`}>
-                            <ArrowLeft className="w-4 h-4" />
-                            Retour au profil
+                        <ArrowLeft className="w-4 h-4" />
+                        Retour au profil
                     </Link>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
                         <User className="w-8 h-8" />
@@ -57,6 +56,6 @@ async function BuyerParticipationsPage () {
             </div>
         </div>
     );
-};
+}
 
 export default BuyerParticipationsPage;
