@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
             const winner = (await getUserById(winningTicket.buyer_id))[0];
             await sendEmail(seller.email, SellerCampaignSuccessEmail({sellerName: `${seller.first_name} ${seller.last_name}`, campaignTitle: campaign.title}), "Votre campagne est un succès - Winali");
             if (winner) {
-                await sendEmail(winner.email, WinnerCampaignEmail({winnerName: `${winner.first_name} ${winner.last_name}`, campaignTitle: campaign.title}), "Vous avez gagné le lots - Winali");
+                await sendEmail(winner.email, WinnerCampaignEmail({winnerName: `${winner.first_name} ${winner.last_name}`, campaignTitle: campaign.title}), "Vous avez gagné le lot - Winali");
             }
         }
     }

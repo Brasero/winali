@@ -70,6 +70,6 @@ export async function handleDrawAndClose(campaignId: string) {
     UPDATE campaigns
     SET is_closed = TRUE, is_drawn = TRUE
     WHERE id = $1
-  `)
+  `, [campaignId]);
   return winnerTicket;
 }
