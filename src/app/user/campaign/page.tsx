@@ -115,7 +115,6 @@ export default function CreateCampaign(){
         return;
       }
       const {campaignId} = await result.json();
-      //const response = await result.json(); // contient l'id de la campagne créée
         toast.success("Votre campagne a été créée avec succès", {id: toastId})
         setCampaign({
           title: "",
@@ -127,7 +126,6 @@ export default function CreateCampaign(){
           end_date: "",
         })
         router.push(`/campaigns/${campaignId}`) // Redirection vers la page de la campagne créée
-        // todo redirect to the campaign page
     } catch (e) {
         toast.error("Une erreur est survenue lors de la création de votre campagne", {id: toastId})
         console.error(e)

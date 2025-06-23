@@ -27,10 +27,19 @@ export interface Campaign {
     tickets: [];
     image_urls?: string[];
     description: string;
+    end_date: string;
     user?: {
         last_name: unknown;
         first_name: unknown;
     }
+}
+
+export interface Ticket {
+    id: string;
+    buyer_id: string;
+    amount_paid: number;
+    purchased_at: string;
+    campaign_id?: string;
 }
 
 export const getCampaignsById = async (campaignId:string) => {
@@ -44,13 +53,31 @@ export const getCampaignsById = async (campaignId:string) => {
 }
 
 export const getTicketByCampaignId = async (campaignId:string) => {
-    const rows = await query(`
+    const rows = await query<Ticket[]>(`
     SELECT
     id,buyer_id,amount_paid,purchased_at
     FROM tickets
     WHERE campaign_id = $1
     `,[campaignId])
     return rows
+}
+
+export const createDraw = async (campaignId: string, winnerTicketId: string) => {
+    const rows = await query<{id: string}[]>(`
+        INSERT INTO draws (campaign_id, winning_ticket_id, succeeded)
+        VALUES ($1, $2, TRUE)
+        RETURNING id
+    `, [campaignId, winnerTicketId]);
+    return rows[0].id;
+
+}
+
+export const getPendingCampaigns = async () => {
+    const rows = await query<Campaign[]>(`
+        SELECT * FROM campaigns
+        WHERE is_closed = false
+    `)
+    return rows;
 }
 
 export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promise<Campaign[]> => {
