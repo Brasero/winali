@@ -44,7 +44,7 @@ export async function runCampaignCheck() {
         continue;
       }
       const winner = (await getUserById(winnerTicket.buyer_id))[0];
-      await sendEmail(seller.email, SellerCampaignSuccessEmail({sellerName: `${seller.first_name} ${seller.last_name}`, campaignTitle: campaign.title, winnerName: `${winner.first_name} ${winner.last_name}`}), "Campagne réussie - Winali");
+      await sendEmail(seller.email, SellerCampaignSuccessEmail({sellerName: `${seller.first_name} ${seller.last_name}`, campaignTitle: campaign.title}), "Campagne réussie - Winali");
       await sendEmail(winner.email, WinnerCampaignEmail({winnerName: `${winner.first_name} ${winner.last_name}`, campaignTitle: campaign.title}), "Félicitations - Vous avez gagné une campagne Winali");
       
       console.log(`Campaign ${id} has ended with enough tickets sold. End date: ${endDate.toISOString()}, current time: ${now.toISOString()} - Winner will be drawn.`);
