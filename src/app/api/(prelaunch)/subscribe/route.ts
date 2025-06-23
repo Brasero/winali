@@ -2,7 +2,7 @@ import {query} from "@/lib/db";
 import { z } from "zod";
 import crypto from "crypto";
 import {NextRequest, NextResponse} from "next/server";
-import {sendVerificationMail} from "@/lib/mail";
+import {sendEmail} from "@/lib/mail";
 import {ValidateEmailTemplatePreLunch} from "@/components/utils/EmailTemplate";
 
 const createTable = async () => {
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
         const verificationLink = `${process.env.NEXT_PUBLIC_APP_URL}/api/verify?token=${token}${ref ? `&ref=${ref}` : ""}`;
 
-        await sendVerificationMail(email, ValidateEmailTemplatePreLunch({verifyUrl: verificationLink}), "Confirmation d’inscription au pré-lancement de Winali");
+        await sendEmail(email, ValidateEmailTemplatePreLunch({verifyUrl: verificationLink}), "Confirmation d’inscription au pré-lancement de Winali");
 
         return NextResponse.json({message: "E-mail enregistré, un e-mail de confirmation vous a été envoyé."}, {status: 200});
     } catch(err) {

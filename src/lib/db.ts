@@ -62,16 +62,6 @@ export const getTicketByCampaignId = async (campaignId:string) => {
     return rows
 }
 
-export const createDraw = async (campaignId: string, winnerTicketId: string) => {
-    const rows = await query<{id: string}[]>(`
-        INSERT INTO draws (campaign_id, winning_ticket_id, succeeded)
-        VALUES ($1, $2, TRUE)
-        RETURNING id
-    `, [campaignId, winnerTicketId]);
-    return rows[0].id;
-
-}
-
 export const getPendingCampaigns = async () => {
     const rows = await query<Campaign[]>(`
         SELECT * FROM campaigns
@@ -249,6 +239,7 @@ export interface IWinner {
     image: string;
 }
 export const getTwoLastWinner = async () => {
+    // todo : Remplacer par une réelle requête des dérniers gagnants
     return await query<IWinner[]>(`
         SELECT
         u.first_name,
@@ -264,4 +255,21 @@ export const getTwoLastWinner = async () => {
         ORDER BY t.purchased_at DESC
         LIMIT 2
     `)
+}
+
+export const createDraw = async (campaignId: string, winnerTicketId: string) => {
+    const rows = await query<{id: string}[]>(`
+        INSERT INTO draws (campaign_id, winning_ticket_id, succeeded)
+        VALUES ($1, $2, TRUE)
+        RETURNING id
+    `, [campaignId, winnerTicketId]);
+    return rows[0].id;
+}
+
+export const closeCampaignAndSetDraw = async (campaignId: string, draw: boolean) => {
+    await query(`
+        UPDATE campaigns
+        SET is_closed = TRUE, is_drawn = $1
+        WHERE id = $2
+    `, [draw, campaignId]);
 }
