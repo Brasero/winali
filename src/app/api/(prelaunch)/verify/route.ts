@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from "next/server";
 import {query} from "@/lib/db";
-import {sendVerificationMail} from "@/lib/mail";
-import {refferalLinkEmail} from "@/components/utils/EmailTemplate";
+import {sendEmail} from "@/lib/mail";
+import {referralLinkEmail} from "@/components/utils/EmailTemplate";
 
 export async function GET(req: NextRequest) {
     const {searchParams} = new URL(req.url);
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
         )
         const referralLink = `${process.env.NEXT_PUBLIC_APP_URL}/waiting?ref=${referrer_token}`;
         
-        await sendVerificationMail(emails[0].email, refferalLinkEmail({verifyUrl: referralLink}), "Votre lien de réferencement Winali !");
+        await sendEmail(emails[0].email, referralLinkEmail({verifyUrl: referralLink}), "Votre lien de réferencement Winali !");
 
         return NextResponse.redirect(new URL("/merci", req.url))
     } catch (error) {

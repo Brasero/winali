@@ -2,7 +2,10 @@ import {stripe} from "@/lib/stripe";
 import {NextRequest, NextResponse} from "next/server";
 import {headers} from "next/headers";
 import Stripe from "stripe";
-import {query} from "@/lib/db";
+import {getCampaignsById, getUserById, query} from "@/lib/db";
+import {handleDrawAndClose} from "@/lib/utils/draw";
+import {sendEmail} from "@/lib/mail";
+import {SellerCampaignSuccessEmail, WinnerCampaignEmail} from "@/components/utils/EmailTemplate";
 
 export const config = {
     api: {
@@ -54,6 +57,39 @@ export async function POST(req: NextRequest) {
                 INSERT INTO ticket_payments (ticket_id, stripe_transaction_id)
                 VALUES ($1, $2)
             `, [ticketId, stripeTxId]);
+        }
+        // check if the campaign is fully funded and allow overflow equal false
+        const campaignRows = await getCampaignsById(campaignId);
+        if (campaignRows.length === 0) {
+            console.error("Campaign not found for ID:", campaignId);
+            return NextResponse.json({error: "Campaign not found"}, {status: 404});
+        }
+        const campaign = campaignRows[0];
+        // Check if the campaign is fully funded
+        const ticketCountRows = await query<{count: number}[]>(
+            `SELECT COUNT(*) as count FROM tickets WHERE campaign_id = $1`,
+            [campaignId]
+        );
+        const ticketCountInCampaign = ticketCountRows[0].count;
+        if (ticketCountInCampaign >= campaign.min_tickets && !campaign.allow_overflow) {
+            // Close the campaign and draw a winner
+            const winningTicket = await handleDrawAndClose(campaignId)
+            if (!winningTicket) {
+                console.error("Failed to draw a winner for campaign:", campaignId);
+                return NextResponse.json({error: "Failed to draw a winner"}, {status: 500});
+            }
+            // notify the seller
+            const seller = (await getUserById(campaign.seller_id))[0];
+            if (!seller) {
+                console.error("Seller not found for campaign:", campaignId);
+                return NextResponse.json({error: "Seller not found"}, {status: 404});
+            }
+            // Notify the winner
+            const winner = (await getUserById(winningTicket.buyer_id))[0];
+            await sendEmail(seller.email, SellerCampaignSuccessEmail({sellerName: `${seller.first_name} ${seller.last_name}`, campaignTitle: campaign.title}), "Votre campagne est un succès - Winali");
+            if (winner) {
+                await sendEmail(winner.email, WinnerCampaignEmail({winnerName: `${winner.first_name} ${winner.last_name}`, campaignTitle: campaign.title}), "Vous avez gagné le lot - Winali");
+            }
         }
     }
     return NextResponse.json({received: true}, {status: 200});

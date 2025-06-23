@@ -3,7 +3,7 @@ import crypto from "crypto";
 import {query} from "@/lib/db";
 import {signInSchema} from "@/lib/zod";
 import {hashPassword} from "@/lib/password";
-import {sendVerificationMail} from "@/lib/mail";
+import {sendEmail} from "@/lib/mail";
 import {ValidateEmailTemplate} from "@/components/utils/EmailTemplate";
 
 const createTable = async () => {
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
             VALUES ($1, $2, $3, $4, $5, $6, FALSE, FALSE)
         `, [email, hashedPassword, first_name, last_name, birth_date, validateToken]);
 
-        await sendVerificationMail(email, ValidateEmailTemplate({verifyUrl: validateURL}), "Vérification de votre compte Winali");
+        await sendEmail(email, ValidateEmailTemplate({verifyUrl: validateURL}), "Vérification de votre compte Winali");
 
         return new Response(JSON.stringify({message: "Inscription réussie. Un e-mail de confirmation va vous être envoyé"}), {status: 201});
     } catch (error) {

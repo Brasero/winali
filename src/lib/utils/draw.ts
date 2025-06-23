@@ -1,9 +1,25 @@
-import {createDraw, getPendingCampaigns, getTicketByCampaignId, query} from "@/lib/db";
+import {
+  closeCampaignAndSetDraw,
+  createDraw,
+  getPendingCampaigns,
+  getTicketByCampaignId,
+  getUserById,
+  query
+} from "@/lib/db";
+import {sendEmail} from "@/lib/mail";
+import {
+  SellerCampaignFailedEmail,
+  SellerCampaignSuccessEmail,
+  WinnerCampaignEmail
+} from "@/components/utils/EmailTemplate";
 
 export async function runCampaignCheck() {
+  // date actuelle
   const now = new Date();
+  // Récupérer les campagnes en attente
   const campaigns = await getPendingCampaigns();
   for (const campaign of campaigns) {
+    // Récupérer les informations du vendeur
     const {
       id,
       min_tickets,
@@ -12,19 +28,24 @@ export async function runCampaignCheck() {
     const endDate = new Date(end_date);
     const ticketSells = await getTicketByCampaignId(id);
     if (now >= endDate && ticketSells.length < min_tickets) {
-      // Fermer la campagne
-      // Prevenir le vendeur par mail
-      // enclenché le remboursmement des tickets achetés
+      const seller = (await getUserById(campaign.seller_id))[0];
+      await closeCampaignAndSetDraw(id, false);
+      await sendEmail(seller.email, SellerCampaignFailedEmail({sellerName: `${seller.first_name} ${seller.last_name}`, campaignTitle: campaign.title}), "Campagne échouée - Winali");
+      
+      // todo : enclenché le remboursement des tickets achetés
       console.log(`Campaign ${id} has ended without enough tickets sold. End date: ${endDate.toISOString()}, current time: ${now.toISOString()}`);
       continue;
     }
     if (now >= endDate && ticketSells.length >= min_tickets) {
+      const seller = (await getUserById(campaign.seller_id))[0];
       const winnerTicket = await handleDrawAndClose(id);
       if (!winnerTicket) {
         console.log(`No tickets sold for campaign ${id}. Cannot draw a winner.`);
         continue;
       }
-      // todo : Envoi d'un email au gagnant et au vendeur
+      const winner = (await getUserById(winnerTicket.buyer_id))[0];
+      await sendEmail(seller.email, SellerCampaignSuccessEmail({sellerName: `${seller.first_name} ${seller.last_name}`, campaignTitle: campaign.title}), "Campagne réussie - Winali");
+      await sendEmail(winner.email, WinnerCampaignEmail({winnerName: `${winner.first_name} ${winner.last_name}`, campaignTitle: campaign.title}), "Félicitations - Vous avez gagné une campagne Winali");
       
       console.log(`Campaign ${id} has ended with enough tickets sold. End date: ${endDate.toISOString()}, current time: ${now.toISOString()} - Winner will be drawn.`);
       continue;
@@ -49,6 +70,6 @@ export async function handleDrawAndClose(campaignId: string) {
     UPDATE campaigns
     SET is_closed = TRUE, is_drawn = TRUE
     WHERE id = $1
-  `)
+  `, [campaignId]);
   return winnerTicket;
 }

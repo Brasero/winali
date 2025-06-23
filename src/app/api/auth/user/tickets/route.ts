@@ -13,10 +13,12 @@ export async function GET() {
     tickets_id: string;
     total_spent: number;
     purchased_at: string;
+    is_closed?: boolean; // Optional, if you want to include campaign status
   }[]>(`
       SELECT
           c.id AS campaign_id,
           c.title AS campaign_title,
+          c.is_closed AS is_closed,
           t.id AS tickets_id,
           t.amount_paid AS total_spent,
           t.purchased_at AS purchased_at

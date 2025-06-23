@@ -24,6 +24,7 @@ export interface Campaign {
     collected: number;
     seller_id: string;
     allow_overflow: boolean;
+    is_drawn?: boolean;
     tickets: [];
     image_urls?: string[];
     description: string;
@@ -62,16 +63,6 @@ export const getTicketByCampaignId = async (campaignId:string) => {
     return rows
 }
 
-export const createDraw = async (campaignId: string, winnerTicketId: string) => {
-    const rows = await query<{id: string}[]>(`
-        INSERT INTO draws (campaign_id, winning_ticket_id, succeeded)
-        VALUES ($1, $2, TRUE)
-        RETURNING id
-    `, [campaignId, winnerTicketId]);
-    return rows[0].id;
-
-}
-
 export const getPendingCampaigns = async () => {
     const rows = await query<Campaign[]>(`
         SELECT * FROM campaigns
@@ -83,7 +74,7 @@ export const getPendingCampaigns = async () => {
 export const getCampaignAndTicketByCampaignId = async (campaignId:string): Promise<Campaign[]> => {
     const rows = await query<Campaign[]>(`
     SELECT
-    c.id,c.seller_id,c.title,c.description,c.image_urls,c.ticket_price,c.min_tickets,c.end_date,c.is_closed,c.created_at,c.allow_overflow,
+    c.id,c.seller_id,c.title,c.description,c.image_urls,c.ticket_price,c.min_tickets,c.end_date,c.is_closed,c.created_at,c.allow_overflow,c.is_drawn,
     COALESCE(
       json_agg(t.*) FILTER (WHERE t.id IS NOT NULL),
         '[]'
@@ -176,7 +167,7 @@ export const getCampaigns = async () => {
 export const getCampaignAndTicketDetailBySellerId = async (sellerId: string) => {
     return await query<Campaign[]>(`
         SELECT
-        c.id, c.created_at, c.end_date, c.description, c.description, c.min_tickets, c.title, c.ticket_price, c.is_closed,
+        c.id, c.created_at, c.end_date, c.description, c.description, c.min_tickets, c.title, c.ticket_price, c.is_closed, c.is_drawn,
         COALESCE(
             json_agg(t.*) FILTER ( WHERE t.id IS NOT NULL),
             '[]'
@@ -257,11 +248,29 @@ export const getTwoLastWinner = async () => {
         t.id AS ticket_number,
         t.purchased_at AS date,
         c.image_urls[1] AS image
-        FROM tickets t
+        FROM draws d
+        JOIN tickets t ON d.winning_ticket_id = t.id
         JOIN campaigns c ON t.campaign_id = c.id
         JOIN users u ON t.buyer_id = u.id
-        WHERE c.is_closed = true
+        WHERE d.succeeded = TRUE
         ORDER BY t.purchased_at DESC
         LIMIT 2
     `)
+}
+
+export const createDraw = async (campaignId: string, winnerTicketId: string) => {
+    const rows = await query<{id: string}[]>(`
+        INSERT INTO draws (campaign_id, winning_ticket_id, succeeded)
+        VALUES ($1, $2, TRUE)
+        RETURNING id
+    `, [campaignId, winnerTicketId]);
+    return rows[0].id;
+}
+
+export const closeCampaignAndSetDraw = async (campaignId: string, draw: boolean) => {
+    await query(`
+        UPDATE campaigns
+        SET is_closed = TRUE, is_drawn = $1
+        WHERE id = $2
+    `, [draw, campaignId]);
 }

@@ -20,22 +20,23 @@ const SellerCampaigns = ({campaigns}: SellerCampaignProps) => {
     const data: Campaign[] = use(campaigns)
     const commission = 0.06;
 
-    const getStatusBadge = (status: Campaign['is_closed']) => {
+    const getStatusBadge = (status: Campaign['is_closed'], isDrawn: Campaign["is_drawn"]) => {
         const variants = {
             open: {variant: 'default' as const, label: '🔄 En cours'},
             closed: {variant: 'secondary' as const, label: '⏹️ Terminée'},
-            //tirage_fait: {variant: 'outline' as const, label: '✅ Tirage fait'}
+            tirage_fait: {variant: 'outline' as const, label: '✅ Tirage fait'}
         };
 
-        const {variant, label} = variants[status ? "closed" : "open"];
+        const {variant, label} = variants[isDrawn ? "tirage_fait" : status ? "closed" : "open"];
 
-        // if (status === 'tirage_fait') {
-        //     return <Badge variant={variant} className="border-green-500 text-semibold text-green-600 ">{label}</Badge>;
-        // }
+        if (isDrawn) {
+            return <Badge variant={variant} className="border-green-500 text-semibold text-green-600 ">{label}</Badge>;
+        }
 
         return <Badge variant={variant}>{label}</Badge>;
     };
 
+    console.log("SellerCampaigns data:", data);
     const getProgressPercentage = (sold: number, target: number) => {
         return Math.min((sold / target) * 100, 100);
     };
@@ -78,7 +79,7 @@ const SellerCampaigns = ({campaigns}: SellerCampaignProps) => {
                                     <div className="flex-1">
                                         <div className="flex items-start justify-between mb-4">
                                             <h4 className="font-semibold text-lg">{campaign.title}</h4>
-                                            {getStatusBadge(campaign.is_closed)}
+                                            {getStatusBadge(campaign.is_closed, campaign.is_drawn)}
                                         </div>
 
                                         {/* Progression */}
@@ -114,7 +115,7 @@ const SellerCampaigns = ({campaigns}: SellerCampaignProps) => {
                                             </div>
                                         </div>
                                     </div>
-
+                                    {/*todo : afficher un lien permettant de valider la remise du lot*/}
                                     <div className="flex flex-col gap-3">
                                         <Link
                                             href={`/campaigns/${campaign.id}`}

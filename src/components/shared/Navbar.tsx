@@ -26,13 +26,13 @@ const Navbar = async () => {
                     </div>
                     {/*Links*/}
                     <div className="hidden mx-4 md:flex gap-6 items-center">
-                        <Link href="#comment-ca-marche" className="text-gray-600 hover:text-brand-purple transition-colors font-medium">
+                        <Link href="/how" className="text-gray-600 hover:text-brand-purple transition-colors font-medium">
                             Comment ça marche
                         </Link>
                         <Link href="/campaigns" className="text-gray-600 hover:text-brand-purple transition-colors font-medium">
                             Ventes actives
                         </Link>
-                        <Link href="#gagnants" className="text-gray-600 hover:text-brand-purple transition-colors font-medium">
+                        <Link href="/winners" className="text-gray-600 hover:text-brand-purple transition-colors font-medium">
                             Gagnants
                         </Link>
                     </div>
