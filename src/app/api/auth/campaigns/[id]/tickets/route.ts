@@ -1,7 +1,7 @@
 import {stripe} from "@/lib/stripe";
 import {NextRequest, NextResponse} from "next/server";
 import {auth} from "@/auth";
-import {getCampaignsById, query} from "@/lib/db";
+import {getCampaignsById, query} from "@/lib/db/db";
 
 export async function POST(req: NextRequest, {params}: {params: Promise<{id: string}>}) {
     const session = await auth();

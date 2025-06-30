@@ -1,5 +1,5 @@
 import {NextRequest, NextResponse} from "next/server";
-import {query} from "@/lib/db";
+import {query} from "@/lib/db/db";
 import {sendEmail} from "@/lib/mail";
 import {referralLinkEmail} from "@/components/utils/EmailTemplate";
 

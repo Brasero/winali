@@ -1,7 +1,7 @@
 import NextAuth, {CredentialsSignin} from "next-auth";
 import {Session} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import {getUserById, query, TSafeUser} from "@/lib/db";
+import {getUserById, query, TSafeUser} from "@/lib/db/db";
 import {randomBytes, randomUUID} from "crypto";
 import {isSamePassword} from "@/lib/password";
 import {JWT} from "next-auth/jwt";

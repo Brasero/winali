@@ -1,5 +1,5 @@
 import { buttonVariants} from '@/components/ui/button';
-import {getBuyerSectionCampaigns, getTwoLastWinner} from "@/lib/db";
+import {getBuyerSectionCampaigns, getTwoLastWinner} from "@/lib/db/db";
 import {Progress} from "@/components/ui/progress";
 import Link from "next/link";
 import Image from "next/image";

@@ -7,7 +7,7 @@ import {Progress} from '@/components/ui/progress';
 import {Euro, ExternalLink, Target, TrendingUp} from 'lucide-react';
 import Link from "next/link";
 import {use} from "react";
-import {Campaign} from "@/lib/db";
+import {Campaign} from "@/lib/db/db";
 
 
 type SellerCampaignProps = {

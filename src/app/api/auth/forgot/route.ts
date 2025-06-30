@@ -1,5 +1,5 @@
 import {NextResponse, NextRequest} from "next/server";
-import {getUserByEmail, query} from "@/lib/db";
+import {getUserByEmail, query} from "@/lib/db/db";
 import {sendEmail} from "@/lib/mail";
 import {resetPasswordEmail} from "@/components/utils/EmailTemplate";
 

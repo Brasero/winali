@@ -2,7 +2,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import Link from "next/link";
-import {getHeroCampaign} from "@/lib/db";
+import {getHeroCampaign} from "@/lib/db/db";
 import Image from "next/image";
 
 const Hero = async () => {
