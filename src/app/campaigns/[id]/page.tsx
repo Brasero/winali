@@ -33,7 +33,7 @@ return(
           </CardTitle>
           <CardDescription className={"flex justify-between"}>
             <div>
-              <p className={"font-bold text-black text-xl"}>{parseInt(campaign.ticket_price).toFixed()} €</p>
+              <p className={"font-bold text-black text-xl"}>{campaign.ticket_price.toFixed()} €</p>
               <p>par ticket</p>
             </div>
             <div>
