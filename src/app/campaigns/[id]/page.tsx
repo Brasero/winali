@@ -13,7 +13,7 @@ return(
   <div className={"w-full p-5"}>
     <div className={"flex flex-col lg:flex-row justify-center align-center lg:align-start"}>
       <div className={"max-w-[541px] w-full pb-17 px-0 md:px-15 flex flex-col items-center"}>
-        <CampaignImage images={campaign.image_urls}/>
+        <CampaignImage images={campaign.image_urls!}/>
       </div>
       <div className={"lg:w-1/2 flex flex-col gap-[10px]"}>
         <h1 className={"font-bold text-2xl"}>{campaign.title}</h1>
