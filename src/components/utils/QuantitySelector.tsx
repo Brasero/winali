@@ -13,6 +13,7 @@ interface QuantitySelectorProps {
   campaignId:string;
   ticket_price:number;
   allow_overflow:boolean;
+  isClosed: boolean;
 }
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -23,6 +24,7 @@ export default function QuantitySelector({
    campaignId,
   ticket_price,
   allow_overflow,
+  isClosed,
  }: QuantitySelectorProps) {
   const [quantity, setQuantity] = useState(1);
 
@@ -119,7 +121,7 @@ export default function QuantitySelector({
         <span className={"font-bold"}>{ticket_price * quantity} €</span>
       </p>
       <div>
-        <Button onClick={handleSubmit} disabled={isLoading} className={"w-full"}>Acheter des tickets</Button>
+        <Button onClick={handleSubmit} disabled={isLoading || isClosed} className={"w-full"}>{isClosed ? "Vente de participations close": "Acheter des tickets"}</Button>
       </div>
     </>
   );
