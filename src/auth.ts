@@ -77,7 +77,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
          async session({ session, token }: {session: Session, token: JWT}) {
              const user = (await getUserById(token.id as string))[0];
             session.user.id = token.id as string ?? "";
-            session.user.role = (user as TSafeUser)?.role as string ?? "user"; // Assurez-vous que le rôle est défini
+            session.user.role = (user as TSafeUser)?.role ?? "user"; // Assurez-vous que le rôle est défini
             return session;
         }
     },
