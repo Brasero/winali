@@ -30,8 +30,8 @@ export interface Campaign {
     description: string;
     end_date: string;
     user?: {
-        last_name: unknown;
-        first_name: unknown;
+        last_name: string;
+        first_name: string;
     }
 }
 

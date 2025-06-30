@@ -75,7 +75,7 @@ const BuyerParticipation = ({participations}) => {
 
                                         <Link
                                             className={`${buttonVariants({variant: "outline", size: "sm"})} flex items-center gap-2`}
-                                            href={`/campaign/${participation.campaignId}`}
+                                            href={`/campaigns/${participation.campaignId}`}
                                         >
                                             <ExternalLink className="w-4 h-4" />
                                             Voir la campagne
