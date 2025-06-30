@@ -1,6 +1,6 @@
 import {NextRequest} from "next/server";
 import crypto from "crypto";
-import {query} from "@/lib/db";
+import {query} from "@/lib/db/db";
 import {signInSchema} from "@/lib/zod";
 import {hashPassword} from "@/lib/password";
 import {sendEmail} from "@/lib/mail";

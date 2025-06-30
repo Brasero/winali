@@ -8,7 +8,7 @@ import { Mail, Calendar, Shield, LogOut, Settings, ShoppingCart, Store, External
 import Link  from 'next/link';
 import SellerCampaigns from '@/components/profil/SellerCampaigns';
 import {auth, signOut} from "@/auth";
-import {getCampaignAndTicketDetailBySellerId, getUserById, query} from "@/lib/db";
+import {getCampaignAndTicketDetailBySellerId, getUserById, query} from "@/lib/db/db";
 import {revalidatePath} from "next/cache";
 import {Suspense} from "react";
 import {redirect} from "next/navigation";

@@ -11,3 +11,7 @@ export const authRoute: string[] = [
     "/authentification/reset-password",
     "/authentification/new-password"
 ]
+
+export const adminRoutes: string[] = [
+    "/admin",
+]

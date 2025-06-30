@@ -56,6 +56,14 @@ const Navbar = async () => {
                                                 </DropdownMenuSubContent>
                                             </DropdownMenuPortal>
                                         </DropdownMenuSub>
+                                        {
+                                            session.user?.role === "admin" && (
+                                                <>
+                                                    <DropdownMenuSeparator/>
+                                                    <Link href={"/admin"}><DropdownMenuItem>Administration</DropdownMenuItem></Link>
+                                                </>
+                                            )
+                                        }
                                     </DropdownMenuContent>
                                 </DropdownMenu>
 

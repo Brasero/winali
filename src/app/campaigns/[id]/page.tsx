@@ -2,7 +2,7 @@ import CampaignImage from "@/components/shared/CampaignImage";
 import {Progress} from "@/components/ui/progress"
 import {Card, CardAction, CardDescription, CardTitle} from "@/components/ui/card";
 import QuantitySelector from "@/components/utils/QuantitySelector";
-import {Campaign} from "@/lib/db";
+import {Campaign} from "@/lib/db/db";
 
 export default async function Buyer({params}:{params:Promise<{id:string}>}){
   const{id} = await params
@@ -33,7 +33,7 @@ return(
           </CardTitle>
           <CardDescription className={"flex justify-between"}>
             <div>
-              <p className={"font-bold text-black text-xl"}>{campaign.ticket_price.toFixed()} €</p>
+              <p className={"font-bold text-black text-xl"}>{(campaign.ticket_price as number)} €</p>
               <p>par ticket</p>
             </div>
             <div>

@@ -5,7 +5,7 @@ import {
   getTicketByCampaignId,
   getUserById,
   query
-} from "@/lib/db";
+} from "@/lib/db/db";
 import {sendEmail} from "@/lib/mail";
 import {
   SellerCampaignFailedEmail,

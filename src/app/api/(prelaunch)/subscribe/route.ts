@@ -1,4 +1,4 @@
-import {query} from "@/lib/db";
+import {query} from "@/lib/db/db";
 import { z } from "zod";
 import crypto from "crypto";
 import {NextRequest, NextResponse} from "next/server";

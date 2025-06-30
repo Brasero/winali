@@ -2,7 +2,7 @@ import {stripe} from "@/lib/stripe";
 import {NextRequest, NextResponse} from "next/server";
 import {headers} from "next/headers";
 import Stripe from "stripe";
-import {getCampaignsById, getUserById, query} from "@/lib/db";
+import {getCampaignsById, getUserById, query} from "@/lib/db/db";
 import {handleDrawAndClose} from "@/lib/utils/draw";
 import {sendEmail} from "@/lib/mail";
 import {SellerCampaignSuccessEmail, WinnerCampaignEmail} from "@/components/utils/EmailTemplate";

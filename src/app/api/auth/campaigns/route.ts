@@ -1,6 +1,6 @@
 import {NextRequest, NextResponse} from "next/server";
 import {auth} from "@/auth";
-import {getCampaignAndTicketByCampaignId, getUserById, query} from "@/lib/db";
+import {getCampaignAndTicketByCampaignId, getUserById, query} from "@/lib/db/db";
 
 export async function POST(req: NextRequest) {
     const session = await auth();
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({error: "User ID not found"}, {status: 400});
     }
     const rows = await query(`
-        SELECT 
+        SELECT
             id,
             first_name,
             last_name,

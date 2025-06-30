@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import {Suspense, useState} from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import CampaignsTable from '@/components/admin/CampaignsTable';
@@ -8,6 +8,7 @@ import TransactionsTable from '@/components/admin/TransactionsTable';
 import UsersTable from '@/components/admin/UsersTable';
 import DrawsTable from '@/components/admin/DrawsTable';
 import { Shield, Users, CreditCard, Ticket, Trophy } from 'lucide-react';
+import {Skeleton} from "@/components/ui/skeleton";
 
 const Admin = () => {
     const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
@@ -55,7 +56,9 @@ const Admin = () => {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <CampaignsTable onSelectCampaign={setSelectedCampaignId} />
+                                <Suspense fallback={<Skeleton />}>
+                                    <CampaignsTable onSelectCampaign={setSelectedCampaignId} />
+                                </Suspense>
                             </CardContent>
                         </Card>
                     </TabsContent>

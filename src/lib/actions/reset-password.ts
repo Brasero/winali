@@ -1,5 +1,5 @@
 import {hashPassword} from "@/lib/password";
-import {query} from "@/lib/db";
+import {query} from "@/lib/db/db";
 
 export async function resetPasswordWithToken(token: string, newPassword: string): Promise<{success: boolean, error?: string}> {
   const hashedPassword = await hashPassword(newPassword);

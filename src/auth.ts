@@ -1,8 +1,10 @@
 import NextAuth, {CredentialsSignin} from "next-auth";
+import {Session} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import {query} from "@/lib/db";
+import {getUserById, query, TSafeUser} from "@/lib/db/db";
 import {randomBytes, randomUUID} from "crypto";
 import {isSamePassword} from "@/lib/password";
+import {JWT} from "next-auth/jwt";
 
 class CustomError extends CredentialsSignin {
     name: string;
@@ -23,13 +25,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 password: {label: "Mot de passe", type: "password"}
             },
             async authorize(credentials ) {
-                console.log("Authentification_avec_e-mail_et_mot_de_passe", credentials);
                 if (!credentials?.email || !credentials?.password) {
                     return null
                 }
 
-                const rows = await query<{id:string; email:string; password_hash:string; is_email_verified: boolean}[]>(`
-                SELECT id, email, password_hash, is_email_verified
+                const rows = await query<{id:string; email:string; password_hash:string; is_email_verified: boolean; role: string}[]>(`
+                SELECT id, email, password_hash, is_email_verified, role
                 FROM users
                 WHERE email = $1
                 `, [credentials.email as string]);
@@ -52,6 +53,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 return {
                     id: user.id,
                     email: user.email,
+                    role: user.role
                 }
             }
         })
@@ -68,11 +70,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
          jwt({ token , user}) {
              if (user) {
                  token.id = user.id;
+                 console.log("JWT callback - User authenticated", user);
              }
             return token;
         },
-         session({ session, token }) {
+         async session({ session, token }: {session: Session, token: JWT}) {
+             const user = (await getUserById(token.id as string))[0];
             session.user.id = token.id as string ?? "";
+            session.user.role = (user as TSafeUser)?.role ?? "user"; // Assurez-vous que le rôle est défini
             return session;
         }
     },

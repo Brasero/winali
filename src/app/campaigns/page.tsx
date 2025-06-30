@@ -2,7 +2,7 @@ import Image from "next/image";
 import {Progress} from "@/components/ui/progress";
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button";
-import {getCampaigns} from "@/lib/db";
+import {getCampaigns} from "@/lib/db/db";
 
 
 export default async function  AllSales(){
