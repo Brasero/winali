@@ -21,15 +21,6 @@ import {
     PaginationPrevious
 } from "@/components/ui/pagination";
 
-interface Campaign {
-    id: string;
-    title: string;
-    seller: string;
-    status: 'en_cours' | 'termine' | 'clos';
-    ticketsSold: number;
-    ticketsTarget: number;
-}
-
 interface CampaignsTableProps {
     onSelectCampaign: (id: string) => void;
 }
@@ -59,7 +50,7 @@ const CampaignsTable: React.FC<CampaignsTableProps> = ({ onSelectCampaign }) => 
     }, []);
     // Données d'exemple - à remplacer par un appel API
 
-    const getStatusBadge = (status: Campaign['status']) => {
+    const getStatusBadge = (status: TAdminCampaign['status']) => {
         const variants = {
             en_cours: { variant: 'default' as const, label: 'En cours' },
             tirage_fait: { variant: 'secondary' as const, label: 'Tirage fait' },
