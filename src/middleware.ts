@@ -1,5 +1,5 @@
 import {auth} from "@/auth";
-import {authRoute, privateRoute} from "@/routes";
+import {authRoute, privateRoute, adminRoutes} from "@/routes";
 
 export default auth((req) => {
     const isLoggedIn = !!req.auth;
@@ -23,6 +23,11 @@ export default auth((req) => {
     if (isAuthRoute && isLoggedIn) {
         const profilUrl = new URL("/user/profil", nextUrl.origin);
         return Response.redirect(profilUrl);
+    }
+    
+    if (adminRoutes.includes(nextUrl.pathname) && (!isLoggedIn || req.auth?.user?.role !== "admin")) {
+        const loginUrl = new URL("/authentification/login", nextUrl.origin);
+        return Response.redirect(loginUrl);
     }
 
     return

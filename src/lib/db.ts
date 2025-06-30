@@ -193,6 +193,7 @@ export type TUser = {
     birth_date: string;
     validation_token: string | null;
     is_seller: boolean;
+    role: 'user' | 'admin';
 }
 
 export type TSafeUser = Omit<TUser, "password_hash" | "validation_token">
@@ -206,6 +207,7 @@ export const getUserById = async (userId:string) => {
         email,
         is_email_verified,
         is_seller,
+        role,
         created_at,
         birth_date,
         updated_at
@@ -223,6 +225,7 @@ export const getUserByEmail = async (email: string) => {
         email,
         is_email_verified,
         is_seller,
+        role,
         created_at,
         birth_date,
         updated_at
