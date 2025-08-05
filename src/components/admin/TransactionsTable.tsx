@@ -1,3 +1,4 @@
+'use client';
 import {
     Table,
     TableBody,
@@ -8,58 +9,27 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Euro, TrendingUp, TrendingDown, ArrowRight } from 'lucide-react';
+import {TAdminTransaction} from "@/lib/db/types";
+import {fetchTransactions} from "@/components/admin/action/transactionAction";
+import {useEffect, useState} from "react";
 
-interface Transaction {
-    id: string;
-    user: string;
-    campaign: string;
-    type: 'payment' | 'refund' | 'payout';
-    amount: number;
-    commission: number;
-    netAmount: number;
-    status: 'success' | 'failed' | 'pending';
-    date: string;
-}
 
 const TransactionsTable = () => {
     // Données d'exemple - à remplacer par un appel API
-    const transactions: Transaction[] = [
-        {
-            id: 'txn_001',
-            user: 'jean.dupont@email.com',
-            campaign: 'Concert Jazz Festival',
-            type: 'payment',
-            amount: 100,
-            commission: 5,
-            netAmount: 95,
-            status: 'success',
-            date: '2024-01-15 14:30',
-        },
-        {
-            id: 'txn_002',
-            user: 'marie.martin@email.com',
-            campaign: 'Match PSG vs OM',
-            type: 'refund',
-            amount: 50,
-            commission: 0,
-            netAmount: -50,
-            status: 'success',
-            date: '2024-01-16 09:15',
-        },
-        {
-            id: 'txn_003',
-            user: 'EventCorp',
-            campaign: 'Concert Jazz Festival',
-            type: 'payout',
-            amount: 1000,
-            commission: 50,
-            netAmount: 950,
-            status: 'pending',
-            date: '2024-01-16 16:45',
-        },
-    ];
-
-    const getTypeIcon = (type: Transaction['type']) => {
+    const [transactions, setTransactions] = useState<TAdminTransaction[]>([])
+    
+    useEffect(() => {
+        fetchTransactions(1, 10).then(transactions => {
+            console.log('Transactions fetched:', transactions);
+            setTransactions(transactions);
+        }).catch(error => {
+            console.error('Error fetching transactions:', error);
+        });
+        return () => {
+            setTransactions([]);
+        };
+    }, []);
+    const getTypeIcon = (type: TAdminTransaction['type']) => {
         switch (type) {
             case 'payment':
                 return <TrendingUp className="w-4 h-4 text-green-500" />;
@@ -70,7 +40,7 @@ const TransactionsTable = () => {
         }
     };
 
-    const getTypeBadge = (type: Transaction['type']) => {
+    const getTypeBadge = (type: TAdminTransaction['type']) => {
         const variants = {
             payment: { variant: 'secondary' as const, label: 'Paiement', color: 'bg-green-100 text-green-800' },
             refund: { variant: 'destructive' as const, label: 'Remboursement', color: 'bg-red-100 text-red-800' },
@@ -81,7 +51,7 @@ const TransactionsTable = () => {
         return <Badge className={color}>{label}</Badge>;
     };
 
-    const getStatusBadge = (status: Transaction['status']) => {
+    const getStatusBadge = (status: TAdminTransaction['status']) => {
         const variants = {
             success: { variant: 'secondary' as const, label: 'Réussi', color: 'bg-green-100 text-green-800' },
             failed: { variant: 'destructive' as const, label: 'Échec', color: 'bg-red-100 text-red-800' },
@@ -129,18 +99,18 @@ const TransactionsTable = () => {
                             <TableCell>
                                 <div className="flex items-center gap-1 text-red-600">
                                     <Euro className="w-4 h-4" />
-                                    {transaction.commission}
+                                    {transaction.commission_amount}
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <div className={`flex items-center gap-1 ${transaction.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                <div className={`flex items-center gap-1 ${transaction.net_amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                     <Euro className="w-4 h-4" />
-                                    {transaction.netAmount}
+                                    {transaction.net_amount}
                                 </div>
                             </TableCell>
                             <TableCell>{getStatusBadge(transaction.status)}</TableCell>
                             <TableCell className="text-sm text-gray-600">
-                                {transaction.date}
+                                {new Date(transaction.date).toLocaleDateString('fr-FR', {})} {new Date(transaction.date).toLocaleTimeString()}
                             </TableCell>
                         </TableRow>
                     ))}
