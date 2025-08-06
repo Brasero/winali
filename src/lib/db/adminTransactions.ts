@@ -21,6 +21,6 @@ export const getAdminTransactions = async (page: number, amount: number): Promis
   `, [amount, offset]);
   return rows.map(row => ({
     ...row,
-    status: row.status || 'pending', // Assuming status is not included in the query, set a default
+    status: row.status || 'success', // Assuming status is not included in the query, set a default
   }));
 }

@@ -1,4 +1,3 @@
-'use client';
 import {
     Table,
     TableBody,
@@ -73,7 +72,7 @@ const TransactionsTable = () => {
                         <TableHead>Type</TableHead>
                         <TableHead>Montant</TableHead>
                         <TableHead>Commission</TableHead>
-                        <TableHead>Net reversé</TableHead>
+                        <TableHead>Net à reverser</TableHead>
                         <TableHead>Statut</TableHead>
                         <TableHead>Date</TableHead>
                     </TableRow>

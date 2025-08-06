@@ -18,3 +18,15 @@ export interface TAdminTransaction {
   status: "success" | "failed" | "pending";
   date: string;
 }
+
+export interface TAdminUser {
+  id: string;
+  email: string;
+  name: string;
+  email_verified: boolean;
+  registration_date: string;
+  campaigns_count: number;
+  tickets_count: number;
+  status: 'active' | 'suspended' | 'pending';
+  total_spent: number;
+}
