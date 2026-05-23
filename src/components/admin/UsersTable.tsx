@@ -9,53 +9,22 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, XCircle, Mail, Eye } from 'lucide-react';
-
-interface User {
-    id: string;
-    email: string;
-    name: string;
-    emailVerified: boolean;
-    registrationDate: string;
-    campaignsCount: number;
-    ticketsCount: number;
-    status: 'active' | 'suspended' | 'pending';
-}
+import {useEffect, useState} from "react";
+import {TAdminUser} from "@/lib/db/types";
+import {fetchAdminUsers} from "@/components/admin/action/userAction";
 
 const UsersTable = () => {
-    // Données d'exemple - à remplacer par un appel API
-    const users: User[] = [
-        {
-            id: 'usr_001',
-            email: 'jean.dupont@email.com',
-            name: 'Jean Dupont',
-            emailVerified: true,
-            registrationDate: '2024-01-10',
-            campaignsCount: 2,
-            ticketsCount: 5,
-            status: 'active',
-        },
-        {
-            id: 'usr_002',
-            email: 'marie.martin@email.com',
-            name: 'Marie Martin',
-            emailVerified: false,
-            registrationDate: '2024-01-15',
-            campaignsCount: 0,
-            ticketsCount: 3,
-            status: 'pending',
-        },
-        {
-            id: 'usr_003',
-            email: 'paul.bernard@email.com',
-            name: 'Paul Bernard',
-            emailVerified: true,
-            registrationDate: '2024-01-12',
-            campaignsCount: 1,
-            ticketsCount: 8,
-            status: 'active',
-        },
-    ];
-
+    const [users, setUsers] = useState<TAdminUser[]>([])
+    
+    useEffect(() => {
+        fetchAdminUsers(1, 10).then(fetchedUsers => {
+            console.log('Utilisateurs récupérés:', fetchedUsers);
+            setUsers(fetchedUsers);
+        })
+        return () => {
+            setUsers([]);
+        };
+    }, []);
     const getVerificationBadge = (verified: boolean) => {
         return verified ? (
             <Badge className="bg-green-100 text-green-800">
@@ -70,7 +39,7 @@ const UsersTable = () => {
         );
     };
 
-    const getStatusBadge = (status: User['status']) => {
+    const getStatusBadge = (status: TAdminUser['status']) => {
         const variants = {
             active: { variant: 'secondary' as const, label: 'Actif', color: 'bg-green-100 text-green-800' },
             suspended: { variant: 'destructive' as const, label: 'Suspendu', color: 'bg-red-100 text-red-800' },
@@ -92,6 +61,7 @@ const UsersTable = () => {
                         <TableHead>Date d&apos;inscription</TableHead>
                         <TableHead>Campagnes</TableHead>
                         <TableHead>Tickets</TableHead>
+                        <TableHead>Total dépensé</TableHead>
                         <TableHead>Statut</TableHead>
                         <TableHead>Actions</TableHead>
                     </TableRow>
@@ -106,15 +76,21 @@ const UsersTable = () => {
                                     <div className="text-sm text-gray-500">{user.email}</div>
                                 </div>
                             </TableCell>
-                            <TableCell>{getVerificationBadge(user.emailVerified)}</TableCell>
+                            <TableCell>{getVerificationBadge(user.email_verified)}</TableCell>
                             <TableCell className="text-sm text-gray-600">
-                                {user.registrationDate}
+                                {new Date(user.registration_date).toLocaleDateString('fr-FR', {})} {new Date(user.registration_date).toLocaleTimeString()}
                             </TableCell>
                             <TableCell>
-                                <Badge variant="outline">{user.campaignsCount}</Badge>
+                                <Badge variant="outline">{user.campaigns_count}</Badge>
                             </TableCell>
                             <TableCell>
-                                <Badge variant="outline">{user.ticketsCount}</Badge>
+                                <Badge variant="outline">{user.tickets_count}</Badge>
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex items-center gap-1">
+                                    <span className="text-sm text-gray-600">€</span>
+                                    <span className="font-medium">{user.total_spent}</span>
+                                </div>
                             </TableCell>
                             <TableCell>{getStatusBadge(user.status)}</TableCell>
                             <TableCell>
@@ -123,7 +99,7 @@ const UsersTable = () => {
                                         <Eye className="w-4 h-4 mr-1" />
                                         Voir
                                     </Button>
-                                    {!user.emailVerified && (
+                                    {!user.email_verified && (
                                         <Button variant="secondary" size="sm">
                                             <Mail className="w-4 h-4 mr-1" />
                                             Renvoyer
